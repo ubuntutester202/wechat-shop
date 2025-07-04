@@ -1,61 +1,65 @@
-# 4 周电商练手项目实战计划书  
-（按半天 ≈ 4 h 粒度安排，周末不休息，共 56 个时间块）  
-面向：独立新手开发者   |  时间：2025 年 6 月  
-目标：从 0 到上线并可创收的完整电商应用（前端优先开发，支持微信支付）  
+# 4 周电商练手项目实战计划书
 
-> 需求来源：详见 [`docs/overview.md`](overview.md)。所有任务拆解均基于其中的 MVP 功能与非功能需求，请优先查阅。  
+（按半天 ≈ 4 h 粒度安排，周末不休息，共 56 个时间块）面向：独立新手开发者   |  时间：2025 年 6 月目标：从 0 到上线并可创收的完整电商应用（前端优先开发，支持微信支付）
+
+> 需求来源：详见 [`docs/overview.md`](overview.md)。所有任务拆解均基于其中的 MVP 功能与非功能需求，请优先查阅。
 
 ---
 
 ## 一、技术栈与工具
 
-| 层次 | 选型 | 说明 |
-|---|---|---|
-| 前端 | React 18 + Vite + TypeScript + TailwindCSS + Zustand | 主流组合，社区活跃，文档丰富 |
-| Mock | MSW (Mock Service Worker) | 前端阶段脱离后端即可联调 |
-| 后端 | NestJS + PostgreSQL (Prisma ORM) + Redis | 结构清晰、CLI 丰富，易学易扩展 |
-| 支付 | 微信支付 v3 Sandbox | 先接入沙箱，后替换正式商户号 |
-| 测试 | Jest + RTL (前端) / Supertest (后端) | 保证回归与重构安全 |
-| DevOps | GitHub + GitHub Actions CI/CD + Docker | 免费额度充足，流程简单 |
-| 部署 | Vercel (前端) / Render or 腾讯云 Serverless (后端) | 几分钟即可上线 |
-| 协作 | Cursor IDE + GitHub Projects | AI-Pair & 看板管理 |
+
+| 层次   | 选型                                                 | 说明                           |
+| -------- | ------------------------------------------------------ | -------------------------------- |
+| 前端   | React 18 + Vite + TypeScript + TailwindCSS + Zustand | 主流组合，社区活跃，文档丰富   |
+| Mock   | MSW (Mock Service Worker)                            | 前端阶段脱离后端即可联调       |
+| 后端   | NestJS + PostgreSQL (Prisma ORM) + Redis             | 结构清晰、CLI 丰富，易学易扩展 |
+| 支付   | 微信支付 v3 Sandbox                                  | 先接入沙箱，后替换正式商户号   |
+| 测试   | Jest + RTL (前端) / Supertest (后端)                 | 保证回归与重构安全             |
+| DevOps | GitHub + GitHub Actions CI/CD + Docker               | 免费额度充足，流程简单         |
+| 部署   | Vercel (前端) / Render or 腾讯云 Serverless (后端)   | 几分钟即可上线                 |
+| 协作   | Cursor IDE + GitHub Projects                         | AI-Pair & 看板管理             |
 
 ---
 
 ## 二、整体里程碑
 
-1. Week 1：需求 & 设计 & 前端脚手架  
-2. Week 2：前端核心页面 + Mock 数据完成交互  
-3. Week 3：后端 API + 微信支付沙箱 + 真数据联调  
+1. Week 1：需求 & 设计 & 前端脚手架
+2. Week 2：前端核心页面 + Mock 数据完成交互
+3. Week 3：后端 API + 微信支付沙箱 + 真数据联调
 4. Week 4：部署上线 + 多端适配 + 创收渠道 & 业务运营
 
 ---
 
-## 三、详细日程（半天 × 56）  
-说明：  
-• 每块先给「任务概述」，后列「子任务待办」；  
-• 子任务 ≥ 5 条，使用 markdown ✅ / ☐ ；  
-• 伪代码 / 命令行示例用 ```bash …```；  
-• 建议上午 09 : 00-13 : 00，下午 14 : 00-18 : 00，自行调整。  
+## 三、详细日程（半天 × 56）
+
+说明：
+• 每块先给「任务概述」，后列「子任务待办」；
+• 子任务 ≥ 5 条，使用 markdown ✅ / ☐ ；
+• 伪代码 / 命令行示例用 ```bash …```；
+• 建议上午 09 : 00-13 : 00，下午 14 : 00-18 : 00，自行调整。
 
 ---
 
 ### Week 1 基础铺设 & 前端起步
+
 #### Day 1
+
 - 上午：环境&仓库初始化
-  - [ ] 安装 Node 20、PNPM
-  - [ ] 配置 VSCode + Cursor 插件
-  - [ ] 注册 / 登录 GitHub，创建私有仓库 `wechat-shop`
-  - [ ] 初始化 README.md，写项目愿景
-  - [ ] 提交首个 commit
+  - [X] 安装 Node 20、PNPM
+  - [X] 配置 VSCode + Cursor 插件
+  - [X] 注册 / 登录 GitHub，创建私有仓库 `wechat-shop`
+  - [X] 初始化 README.md，写项目愿景
+  - [X] 提交首个 commit
 - 下午：需求分析 & 功能分解
-  - [ ] 列出 MVP 功能（商品列表、详情、购物车、结算、订单、用户）
+  - [X] 列出 MVP 功能（商品列表、详情、购物车、结算、订单、用户）
   - [ ] 制作用户流程图 (draw.io)
   - [ ] 创建 GitHub Project 看板，列 Epic / Story
   - [ ] 编写 API 资源草表 (商品 / 订单 …)
   - [ ] 制定数据库 ER 草图
 
 #### Day 2
+
 - 上午：UI/UX 设计原型
   - [ ] 使用 Figma 绘制首页 / 商品卡片 / 购物车弹窗草图
   - [ ] 设定品牌色 & 字体
@@ -70,6 +74,7 @@
   - [ ] hello world 页面跑通本地 `pnpm dev`
 
 #### Day 3
+
 - 上午：路由 & 布局体系
   - [ ] `pnpm add react-router-dom@6`
   - [ ] 设置主布局 `Layout.tsx` (Header, Footer, Outlet)
@@ -84,6 +89,7 @@
   - [ ] 用 Mock 数据渲染首页列表
 
 #### Day 4
+
 - 上午：商品列表页面完成
   - [ ] 列表瀑布流 / 网格布局 Tailwind
   - [ ] 商品卡片组件抽离 (图片 / 标题 / 价格)
@@ -98,6 +104,7 @@
   - [ ] 购物车数量徽标联动
 
 #### Day 5
+
 - 上午：结算&地址表单原型
   - [ ] 页面 `/checkout` 骨架
   - [ ] 使用 React Hook Form 创建地址输入
@@ -112,6 +119,7 @@
   - [ ] README 更新测试 badge
 
 #### Day 6
+
 - 上午：代码质量工具
   - [ ] 集成 SonarLint 插件
   - [ ] 设置 TypeScript 严格模式
@@ -128,7 +136,9 @@
 ---
 
 ### Week 2 前端功能完备 & UI 打磨
+
 #### Day 7
+
 - 上午：订单列表 & 详情页面
   - [ ] 路由 `/orders` & `/orders/:id`
   - [ ] Mock 历史订单数据
@@ -143,6 +153,7 @@
   - [ ] 安全设置 placeholder
 
 #### Day 8
+
 - 上午：图片上传 & OSS 预研
   - [ ] 调研腾讯云 COS / 阿里 OSS
   - [ ] 用 Mock URL 占位上传返回
@@ -157,6 +168,7 @@
   - [ ] Figma Token 对应更新
 
 #### Day 9
+
 - 上午：国际化 & 数字格式
   - [ ] `pnpm add react-i18next`
   - [ ] 中/英语言包抽离
@@ -171,6 +183,7 @@
   - [ ] 记录性能基线
 
 #### Day 10
+
 - 上午：PWA 支持
   - [ ] `pnpm add -D vite-plugin-pwa`
   - [ ] 生成 manifest.json (名称/图标)
@@ -185,6 +198,7 @@
   - [ ] README 更新如何 mock
 
 #### Day 11
+
 - 上午：Storybook 组件文档完善
   - [ ] 写 `ProductCard.stories.tsx`, `Button.stories.tsx`
   - [ ] 配置 Addon-controls
@@ -201,7 +215,9 @@
 ---
 
 ### Week 3 后端实现 & 真数据联调
+
 #### Day 12
+
 - 上午：NestJS 项目初始化
   - [ ] `pnpm add -g @nestjs/cli`；`nest new backend`
   - [ ] 配置 ESLint, Prettier, Jest
@@ -216,6 +232,7 @@
   - [ ] ER 图导出
 
 #### Day 13
+
 - 上午：用户模块 & JWT
   - [ ] nest g module user / service / controller
   - [ ] 注册、登录、加密 `bcrypt`
@@ -230,6 +247,7 @@
   - [ ] 10 条种子商品生成
 
 #### Day 14
+
 - 上午：购物车 & 订单逻辑
   - [ ] 添加/修改/删除 CartItem API
   - [ ] 结算金额计算服务抽象
@@ -251,6 +269,7 @@
   - [ ] API: 新增浏览记录、获取最近浏览
 
 #### Day 15
+
 - 上午：集成 Redis & 队列
   - [ ] `pnpm add ioredis bull`
   - [ ] 创建 Job：订单超时取消
@@ -265,6 +284,7 @@
   - [ ] 记录 bug / fix
 
 #### Day 16
+
 - 上午：前后端联调 (支付&订单)
   - [ ] 调用后端生成支付参数
   - [ ] H5 调起微信支付 (沙箱公众号)
@@ -281,7 +301,9 @@
 ---
 
 ### Week 4 上线部署 & 运营变现
+
 #### Day 17
+
 - 上午：CI/CD 流水线
   - [ ] GitHub Actions 前端 build + Vercel Deploy
   - [ ] 后端 Docker build & push ghcr.io
@@ -296,6 +318,7 @@
   - [ ] 记录部署手册
 
 #### Day 18
+
 - 上午：SEO & 性能
   - [ ] Next-SEO 或 react-helmet 注入 meta
   - [ ] 站点地图 sitemap.xml & robots.txt
@@ -310,6 +333,7 @@
   - [ ] 形成技术决策文档
 
 #### Day 19
+
 - 上午：数据分析 & 埋点
   - [ ] 集成 umami / Matomo 自托管
   - [ ] 埋点：商品点击、支付成功
@@ -324,6 +348,7 @@
   - [ ] 压力测试 k6 报告
 
 #### Day 20
+
 - 上午：商户号申请 & 正式支付
   - [ ] 提交企业资料申请微信商户号
   - [ ] 替换沙箱 key 为正式 key
@@ -338,6 +363,7 @@
   - [ ] 制作展示 Demo & 报价单
 
 #### Day 21
+
 - 上午：市场推广启动
   - [ ] 申请微信公众号 + 小程序
   - [ ] 发布功能亮点推文
@@ -352,6 +378,7 @@
   - [ ] 项目 logo / icon 收尾
 
 #### Day 22
+
 - 上午：用户反馈 & 快速迭代
   - [ ] 收集首批种子用户反馈表
   - [ ] 制作 Issues 标签：bug/feature
@@ -369,24 +396,23 @@
 
 ## 四、常见疑问解答
 
-1. ⚙️ **前端先行没有后端数据怎么办？**  
+1. ⚙️ **前端先行没有后端数据怎么办？**
    通过 MSW 拦截 fetch/XHR，在浏览器内返回假数据；切后端上线时删除对应 handler 即可。
-
-2. 💰 **如何创收？**  
-   • 最快路径：自营小批量周边商品，利润即现金流；  
-   • 技术接单：将本项目作为作品集，挂靠接外包；  
-   • SaaS 模式：支持多店铺部署，按月收费。  
-
-3. 📦 **多平台适配策略？**  
-   • Web H5 + PWA 一次开发；  
-   • 使用 Taro 打包微信/支付宝小程序；  
-   • React Native 重用业务逻辑（可选）。  
+2. 💰 **如何创收？**
+   • 最快路径：自营小批量周边商品，利润即现金流；
+   • 技术接单：将本项目作为作品集，挂靠接外包；
+   • SaaS 模式：支持多店铺部署，按月收费。
+3. 📦 **多平台适配策略？**
+   • Web H5 + PWA 一次开发；
+   • 使用 Taro 打包微信/支付宝小程序；
+   • React Native 重用业务逻辑（可选）。
 
 ---
 
-> **行动建议**  
-> 1. 立即 fork 此计划，创建同名 Project 看板；  
-> 2. 每完成一半天块即勾选子任务，Push / PR；  
-> 3. 遇阻先查文档，再提 Issue，保持节奏。  
+> **行动建议**
+>
+> 1. 立即 fork 此计划，创建同名 Project 看板；
+> 2. 每完成一半天块即勾选子任务，Push / PR；
+> 3. 遇阻先查文档，再提 Issue，保持节奏。
 
 祝你 4 周后成功上线并赚到第一笔收入！
