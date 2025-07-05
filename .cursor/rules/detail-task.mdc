@@ -8,6 +8,7 @@ alwaysApply: false
 ## 第二步
 - 可以使用 Playwright MCP 获取浏览器的数据。若要在 Microsoft Edge 中运行测试，需要为 Playwright 测试创建配置文件。[Playwright MCP](https://learn.microsoft.com/zh-cn/microsoft-edge/playwright/)
 - 可以使用 context7 MCP 获取准确的官方文档。
+- 编写的代码风格按照prettier插件的默认风格。
 ## 第三步
 请完成子任务后再勾选相应的子任务列表，来更新任务进度。完成任务后，如果有新增文件，请思考要不要更新[`docs/overview.md`](overview.md)和[`README.md`](README.md)。
 
