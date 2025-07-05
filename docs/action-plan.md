@@ -53,8 +53,8 @@
   - [X] 提交首个 commit
 - 下午：需求分析 & 功能分解
   - [X] 列出 MVP 功能（商品列表、详情、购物车、结算、订单、用户）
-  - [ ] 制作用户流程图 (draw.io)
-  - [ ] 创建 GitHub Project 看板，列 Epic / Story
+  - [X] 制作用户流程图 (draw.io)
+  - [X] 创建 GitHub Project 看板，列 Epic / Story
   - [ ] 编写 API 资源草表 (商品 / 订单 …)
   - [ ] 制定数据库 ER 草图
 
