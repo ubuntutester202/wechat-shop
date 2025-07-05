@@ -71,6 +71,7 @@ $ pnpm test
 - 项目概述：[`docs/overview.md`](docs/overview.md)
 - 4 周实操计划书：[`docs/action-plan.md`](docs/action-plan.md)
 - API 资源设计：[`docs/api-resources.md`](docs/api-resources.md)
+- 数据库 ER 图：[`docs/database-er.md`](docs/database-er.md)
 - Git Flow 策略：[`docs/git-flow.md`](docs/git-flow.md)
 - 贡献指南：[`CONTRIBUTING.md`](CONTRIBUTING.md)
 

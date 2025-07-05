@@ -56,7 +56,7 @@
   - [X] 制作用户流程图 (draw.io)
   - [X] 创建 GitHub Project 看板，列 Epic / Story
   - [X] 编写 API 资源草表 (商品 / 订单 …)
-  - [ ] 制定数据库 ER 草图
+  - [X] 制定数据库 ER 草图
 
 #### Day 2
 

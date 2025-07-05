@@ -40,6 +40,7 @@
 ## 关联文档
 - 实操计划书：[`docs/action-plan.md`](action-plan.md)
 - API 资源设计：[`docs/api-resources.md`](api-resources.md)
+- 数据库 ER 图：[`docs/database-er.md`](database-er.md)
 
 ## 技术栈摘要
 前端：React 18 + Vite + TypeScript + TailwindCSS + Zustand + MSW  
