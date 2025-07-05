@@ -63,18 +63,9 @@ $ pnpm test
 - 数据库 ER 图：[`docs/database-er.md`](docs/database-er.md)
 - Git Flow 策略：[`docs/git-flow.md`](docs/git-flow.md)
 - 贡献指南：[`CONTRIBUTING.md`](CONTRIBUTING.md)
-
-## 🗺️ Roadmap
-
-- [x] **v0.1-alpha**：首次启动界面完成 ✅
-  - 基于 Figma 设计稿实现"01 Start"页面
-  - 移动优先响应式设计
-  - PWA 支持，可安装到主屏幕
-- [ ] v0.1：Mock 数据交互 Demo
-- [ ] v0.5：后端 API & 支付沙箱联通
-- [ ] v1.0：正式支付上线并开放接单
-
-查看完整路线图与任务拆解，请见 [`docs/action-plan.md`](docs/action-plan.md)。
+- Roadmap：[roadmap.md](docs/roadmap.md)
+- 所有教程在[docs/tutorial](./docs/tutorial)
+- 查看完整路线图与任务拆解，请见 [`docs/action-plan.md`](docs/action-plan.md)。
 
 ## 🤝 贡献
 
