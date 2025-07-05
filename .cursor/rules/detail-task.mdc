@@ -3,6 +3,11 @@ description:
 globs: 
 alwaysApply: false
 ---
-1. 需求来源：详见 [`docs/overview.md`](overview.md)。所有任务拆解均基于其中的 MVP 功能与非功能需求，请优先查阅关联文档再完成子任务。
-2. 请完成子任务后再勾选相应的子任务列表，来更新任务进度。完成任务后，如果有新增文件，请思考要不要更新[`docs/overview.md`](overview.md)和[`README.md`](README.md)
+## 第一步
+需求来源：详见 [`docs/overview.md`](overview.md)。目录结构速览。所有任务拆解均基于其中的 MVP 功能与非功能需求，请优先查阅关联文档再完成子任务。
+## 第二步
+- 可以使用 Playwright MCP 获取浏览器的数据。若要在 Microsoft Edge 中运行测试，需要为 Playwright 测试创建配置文件。[Playwright MCP](https://learn.microsoft.com/zh-cn/microsoft-edge/playwright/)
+- 可以使用 context7 MCP 获取准确的官方文档。
+## 第三步
+请完成子任务后再勾选相应的子任务列表，来更新任务进度。完成任务后，如果有新增文件，请思考要不要更新[`docs/overview.md`](overview.md)和[`README.md`](README.md)。
 

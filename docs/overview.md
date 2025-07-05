@@ -57,9 +57,52 @@ DevOps：GitHub Actions + Docker + Vercel/Render
 
 ## 目录结构速览
 ```txt
-├─apps
-│  ├─frontend   # React + Vite
-│  └─backend    # NestJS
+├── public/                          # 公共资源目录
+│   ├── favicon.ico
+│   ├── manifest.json               # PWA配置
+│   └── robots.txt
+├── src/                            # 源代码目录
+│   ├── pages/                      # 页面目录
+│   │   ├── auth/                   # 认证相关页面
+│   │   │   ├── login.html
+│   │   │   ├── register.html
+│   │   │   └── forgot-password.html
+│   │   ├── onboarding/             # 引导页面
+│   │   │   ├── welcome.html        # 欢迎页（首次启动）
+│   │   │   └── intro.html          # 介绍页
+│   │   ├── shop/                   # 商城页面
+│   │   ├── cart/                   # 购物车相关
+│   │   ├── order/                  # 订单相关
+│   │   ├── user/                   # 用户中心
+│   │   ├── merchant/               # 商家页面
+│   │   └── common/                 # 通用页面
+│   │       ├── error-404.html
+│   │       ├── error-500.html
+│   │       └── maintenance.html
+│   ├── assets/                     # 资源文件
+│   │   ├── css/                    # 样式文件
+│   │   ├── js/                     # JavaScript文件
+│   │   │   ├── core/               # 核心功能
+│   │   │   │   ├── app.js          # 应用入口
+│   │   │   │   ├── router.js       # 路由管理
+│   │   │   │   ├── utils.js        # 工具函数
+│   │   │   │   └── constants.js    # 常量定义
+│   │   │   ├── components/         # 组件脚本
+│   │   │   ├── pages/              # 页面脚本
+│   │   │   └── libs/               # 第三方库
+│   │   ├── images/                 # 图片资源
+│   │   ├── fonts/                  # 字体文件
+│   │   └── data/                   # 数据文件
+│   │       ├── mock/               # 模拟数据
+│   │       └── schemas/            # 数据模式
+│   ├── components/                 # 组件模板
+│   └── templates/                  # 页面模板
+│       └── base.html               # 基础模板
+├── dist/                           # 构建输出目录
+├── build/                          # 构建脚本
+│   ├── webpack.config.js
+│   ├── build.js
+│   └── dev.js
 ├─docs          # 文档
 └─.github       # CI & 模板
 ```

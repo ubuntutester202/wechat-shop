@@ -55,17 +55,6 @@ $ pnpm test
 
 > 📖 本地开发需提前准备 PostgreSQL & Redis，或修改 `.env.dev` 连接字符串指向 docker-compose 服务。
 
-## 📂 目录结构
-
-```txt
-├─apps
-│  ├─frontend   # React + Vite 前端代码
-│  └─backend    # NestJS 后端代码
-├─docs          # 项目文档（架构、ADR、计划书…）
-├─.github       # CI/CD & Issue/PR 模板
-└─README.md
-```
-
 ## 📚 文档索引
 
 - 项目概述：[`docs/overview.md`](docs/overview.md)
