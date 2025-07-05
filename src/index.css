@@ -1,0 +1,57 @@
+/* 导入Google字体 - 必须放在最前面 */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 基础样式 */
+@layer base {
+  html {
+    font-family: 'Nunito Sans', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-background-primary text-text-primary;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* 自定义组件样式 */
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-text-light font-nunito font-light text-xl leading-relaxed;
+    @apply px-6 py-4 rounded-2xl shadow-soft;
+    @apply hover:bg-primary-600 active:bg-primary-700;
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  .text-brand-title {
+    @apply font-raleway font-bold text-5xl leading-tight tracking-tight;
+  }
+  
+  .text-brand-subtitle {
+    @apply font-nunito font-light text-lg leading-relaxed;
+  }
+  
+  .text-link {
+    @apply font-nunito font-light text-sm leading-relaxed opacity-90;
+  }
+}
+
+/* 移动优先响应式设计 */
+@layer utilities {
+  .container-mobile {
+    @apply max-w-sm mx-auto px-5;
+  }
+  
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+} 
