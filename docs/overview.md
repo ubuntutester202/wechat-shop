@@ -58,7 +58,8 @@ DevOps：GitHub Actions + Docker + Vercel/Render
 ## 目录结构速览
 ```txt
 ├── public/                          # 公共资源目录
-│   ├── favicon.ico
+│   ├── assets/
+│   │   └── images/                  # 图片资源
 │   ├── manifest.json               # PWA配置
 │   └── robots.txt
 ├── src/                            # 源代码目录

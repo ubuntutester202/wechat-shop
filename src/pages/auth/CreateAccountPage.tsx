@@ -17,9 +17,6 @@ const CreateAccountPage: React.FC = () => {
     phoneNumber: "",
   });
 
-  // 密码可见性状态
-  const [showPassword, setShowPassword] = useState(false);
-
   // 头像上传状态
   const [avatar, setAvatar] = useState<string | null>(null);
 
@@ -34,11 +31,6 @@ const CreateAccountPage: React.FC = () => {
       ...prev,
       [field]: value,
     }));
-  };
-
-  // 处理密码可见性切换
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   // 处理头像上传
@@ -57,8 +49,8 @@ const CreateAccountPage: React.FC = () => {
   const handleDone = () => {
     // 这里可以添加表单验证和提交逻辑
     console.log("Form submitted:", formData);
-    // 跳转到下一页面（例如：主页或邮箱验证页）
-    navigate("/shop");
+    // 跳转到登录页面
+    navigate("/auth/login");
   };
 
   return (
@@ -148,42 +140,13 @@ const CreateAccountPage: React.FC = () => {
           {/* Password输入框 */}
           <div className="w-full relative">
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="Password"
               value={formData.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
-              className="w-full h-[52px] px-5 py-4 pr-12 bg-gray-50 rounded-[59px] border-none outline-none font-medium text-sm placeholder-gray-400 focus:bg-gray-100 transition-colors"
+              className="w-full h-[52px] px-5 py-4 bg-gray-50 rounded-[59px] border-none outline-none font-medium text-sm placeholder-gray-400 focus:bg-gray-100 transition-colors"
               aria-label="密码"
             />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-5 top-1/2 transform -translate-y-1/2 w-4 h-4"
-              aria-label={showPassword ? "隐藏密码" : "显示密码"}
-            >
-              {/* 眼睛图标 */}
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {showPassword ? (
-                  <g stroke="#1F1F1F" strokeWidth="1">
-                    <path d="M9.88 9.88a3 3 0 01-4.24-4.24" />
-                    <path d="M6.06 6.06L4.4 4.4m7.2 7.2l1.66 1.66m-11.72 0L3.2 11.6M8 5.2c2.76 0 5.2 1.64 6.4 2.8-1.2 1.16-3.64 2.8-6.4 2.8" />
-                    <path d="M2.4 8c1.2-1.16 3.64-2.8 6.4-2.8" />
-                    <path d="M2.4 2.4l11.2 11.2" />
-                  </g>
-                ) : (
-                  <g stroke="#1F1F1F" strokeWidth="1">
-                    <path d="M8 3.2c2.76 0 5.2 1.64 6.4 2.8C13.2 7.16 10.76 8.8 8 8.8S2.8 7.16 1.6 6C2.8 4.84 5.24 3.2 8 3.2z" />
-                    <circle cx="8" cy="6" r="1.6" />
-                  </g>
-                )}
-              </svg>
-            </button>
           </div>
 
           {/* Phone Number输入框 */}
