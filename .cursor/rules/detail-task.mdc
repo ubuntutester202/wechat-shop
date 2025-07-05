@@ -3,6 +3,7 @@ description:
 globs: 
 alwaysApply: false
 ---
-- 需求来源：详见 [`docs/overview.md`](overview.md)。所有任务拆解均基于其中的 MVP 功能与非功能需求，请优先查阅再完成子任务。
-- 请完成子任务后再勾选相应的子任务列表。
+1. 需求来源：详见 [`docs/overview.md`](overview.md)。所有任务拆解均基于其中的 MVP 功能与非功能需求，请优先查阅再完成子任务。
+2. 请完成子任务后再勾选相应的子任务列表，来更新任务进度。
+3. 完成任务后，如果有新增文件，请思考要不要更新[`docs/overview.md`](overview.md)和[`README.md`](README.md)
 
