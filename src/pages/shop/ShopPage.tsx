@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import StatusBar from "../../components/common/StatusBar";
 import {
   mockProducts,
@@ -15,6 +16,7 @@ import {
  * 电商首页，包含搜索、分类、限时抢购、热门商品等功能模块
  */
 const ShopPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 36, seconds: 58 });
 
@@ -56,7 +58,8 @@ const ShopPage: React.FC = () => {
   // 处理商品点击
   const handleProductClick = (productId: string) => {
     console.log("Navigate to product:", productId);
-    // TODO: 导航到商品详情页面
+    // 导航到商品详情页面
+    navigate(`/product/${productId}`);
   };
 
   // 渲染产品卡片
