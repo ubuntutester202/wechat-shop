@@ -35,6 +35,7 @@ export default {
         }
       },
       spacing: {
+        '15': '3.75rem',
         '18': '4.5rem',
         '88': '22rem',
       },
