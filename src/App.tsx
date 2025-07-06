@@ -5,6 +5,7 @@ import CreateAccountPage from "./pages/auth/CreateAccountPage";
 import LoginPage from "./pages/auth/LoginPage";
 import ShopPage from "./pages/shop/ShopPage";
 import ProductDetailPage from "./pages/product/ProductDetailPage";
+import CartPage from "./pages/cart/CartPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </div>
   );

@@ -62,16 +62,12 @@
 
 - 上午：UI/UX 设计原型
   - [ ] 使用 Figma 模板完成首页 / 商品卡片 / 购物车弹窗等。
-  - [ ] 设定品牌色 & 字体
-  - [ ] 输出移动端 375 px 和桌面 1440 px 版式
-  - [ ] 标注组件尺寸 & 状态
-  - [ ] 将原型图链接写入 README
 - 下午：前端脚手架搭建
-  - [ ] `pnpm create vite@latest wechat-shop --template react-ts`
-  - [ ] `pnpm add -D tailwindcss postcss autoprefixer` 并执行 `npx tailwindcss init -p`
-  - [ ] 配置 ESLint + Prettier + Husky 提交钩子
-  - [ ] 建 `src/components`, `src/pages`, `src/styles` 目录
-  - [ ] hello world 页面跑通本地 `pnpm dev`
+  - [x] `pnpm create vite@latest wechat-shop --template react-ts`
+  - [x] `pnpm add -D tailwindcss postcss autoprefixer` 并执行 `npx tailwindcss init -p`
+  - [x] 配置 ESLint + Prettier + Husky 提交钩子
+  - [x] 建 `src/components`, `src/pages`, `src/styles` 目录
+  - [x] hello world 页面跑通本地 `pnpm dev`
 
 #### Day 3
 
