@@ -9,4 +9,5 @@
 - [**用户登录页的设计与交互实现**](./how-login-page-works.md): 基于 Figma 设计稿实现的 LoginPage 组件详细解析，包含UI组件结构、状态管理和路由导航。
 - [**电商首页的设计与实现：Shop页面深度解析**](./how-shop-page-works.md): 全面解析Shop页面的技术架构、图片资源管理、状态管理策略和UI组件实现，包含倒计时功能、图片加载错误处理等核心技术点。
 - [**解构购物车：状态管理与UI分离的最佳实践**](./how-cart-and-state-management-works.md): 深入探讨了如何使用 Zustand 实现全局购物车状态管理，并将其与React组件（商品页、购物车页）解耦，实现数据与视图的分离。
-- [**个人中心架构解析：从路由到交互的完整实现指南**](./how-profile-page-works.md): 深入解析Profile页面的模块化架构设计、分层布局策略、订单管理系统集成以及完整的用户交互体验实现，展示现代电商应用个人中心页面的最佳实践。 
+- [**个人中心架构解析：从路由到交互的完整实现指南**](./how-profile-page-works.md): 深入解析Profile页面的模块化架构设计、分层布局策略、订单管理系统集成以及完整的用户交互体验实现，展示现代电商应用个人中心页面的最佳实践。
+- [**MSW集成详解：Service Worker层面的API模拟完整指南**](./how-msw-mock-integration-works.md): 全面解析Mock Service Worker的集成原理、配置流程和最佳实践，从Service Worker基础概念到生产环境部署，帮助开发者实现无侵入式的API模拟方案。 

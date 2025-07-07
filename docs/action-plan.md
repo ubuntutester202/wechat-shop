@@ -74,13 +74,13 @@
 - 上午：路由 & 布局体系
   - [x] `pnpm add react-router-dom@6`
   - [x] 设置主布局 `Layout.tsx` (Header, Footer, Outlet)
-  - [ ] 配置路由：`/`, `/product/:id`, `/cart`, `/profile`, `/message`
-  - [ ] 加入懒加载 `React.lazy`
+  - [x] 配置路由：`/`, `/product/:id`, `/cart`, `/profile`, `/message`
+  - [x] 加入懒加载 `React.lazy`
 - 下午：状态管理 & Mock 方案
   - [x] `pnpm add zustand` 建立 `useCartStore`
-  - [ ] `pnpm add -D msw`
-  - [ ] 编写 `src/mocks/handlers.ts` 商品列表 / 详情 / 购物车接口
-  - [ ] service worker 注册开关（仅 dev 环境）
+  - [x] `pnpm add -D msw`
+  - [x] 编写 `src/mocks/handlers.ts` 商品列表 / 详情 / 购物车接口
+  - [x] service worker 注册开关（仅 dev 环境）
   - [x] 用 Mock 数据渲染首页列表
 
 #### Day 4
@@ -95,7 +95,7 @@
   - [x] `useParams` 取 :id 调用 Mock
   - [ ] 数量加减、规格选择
   - [x] `addToCart(product)` 调用 zustand
-  - [ ] 购物车数量徽标联动
+  - [x] 购物车数量徽标联动
 
 #### Day 5
 
