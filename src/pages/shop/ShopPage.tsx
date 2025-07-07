@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StatusBar from "../../components/common/StatusBar";
 import BottomNavigation from "../../components/common/BottomNavigation";
-import { useCartStore } from "../../stores/cartStore";
 import {
-  mockProducts,
   mockCategories,
   mockFlashSaleProducts,
   mockPopularProducts,
@@ -19,9 +17,41 @@ import {
  */
 const ShopPage: React.FC = () => {
   const navigate = useNavigate();
-  const { totalItems } = useCartStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 36, seconds: 58 });
+  
+  // 商品数据状态
+  const [newItems, setNewItems] = useState<Product[]>([]);
+  const [clothingProducts, setClothingProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 获取商品数据
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        
+        // 获取所有商品
+        const response = await fetch('/api/products?limit=20');
+        const data = await response.json();
+        
+        // 获取新品
+        const newItemsData = data.data?.filter((p: Product) => p.isNew) || [];
+        setNewItems(newItemsData);
+        
+        // 获取服装类商品
+        const clothingData = data.data?.filter((p: Product) => p.category === 'clothing') || [];
+        setClothingProducts(clothingData);
+        
+      } catch (error) {
+        console.error('获取商品数据失败:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // 倒计时逻辑
   useEffect(() => {
@@ -226,7 +256,14 @@ const ShopPage: React.FC = () => {
     </div>
   );
 
-
+  // 加载状态
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -423,7 +460,7 @@ const ShopPage: React.FC = () => {
             </div>
           </div>
           <div className="flex space-x-4 overflow-x-auto pb-2">
-            {mockProducts.filter(p => p.category === 'new-items').map((product) => (
+            {newItems.map((product) => (
               <div key={product.id} className="flex-shrink-0 w-36">
                 {renderProductCard(product)}
               </div>
@@ -453,7 +490,7 @@ const ShopPage: React.FC = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {mockProducts.filter(p => p.category === 'clothing').map(product => renderProductCard(product))}
+            {clothingProducts.map(product => renderProductCard(product))}
           </div>
         </div>
       </div>

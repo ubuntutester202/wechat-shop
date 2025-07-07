@@ -329,22 +329,66 @@ sequenceDiagram
 ### 示例1：商品列表页面
 
 ```typescript
-// ShopPage.tsx
+// ShopPage.tsx - 实际实现
 const ShopPage: React.FC = () => {
-  const [products, setProducts] = useState([]);
-  
+  // 商品数据状态
+  const [products, setProducts] = useState<Product[]>([]);
+  const [newItems, setNewItems] = useState<Product[]>([]);
+  const [clothingProducts, setClothingProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // 获取商品数据
   useEffect(() => {
-    // 这个请求会被MSW拦截
-    fetch('/api/products?page=1&limit=10')
-      .then(res => res.json())
-      .then(data => setProducts(data.data));
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        
+        // 这个请求会被MSW拦截
+        const response = await fetch('/api/products?limit=20');
+        const data = await response.json();
+        setProducts(data.data || []);
+        
+        // 过滤不同类型的商品
+        const newItemsData = data.data?.filter((p: Product) => p.isNew) || [];
+        setNewItems(newItemsData);
+        
+        const clothingData = data.data?.filter((p: Product) => p.category === 'clothing') || [];
+        setClothingProducts(clothingData);
+        
+      } catch (error) {
+        console.error('获取商品数据失败:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
+
+  // 加载状态
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
   
   return (
     <div>
-      {products.map(product => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+      {/* 新品推荐 */}
+      <div className="flex space-x-4 overflow-x-auto pb-2">
+        {newItems.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+      
+      {/* 为你推荐 */}
+      <div className="grid grid-cols-2 gap-4">
+        {clothingProducts.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
   );
 };
@@ -491,25 +535,68 @@ if (process.env.NODE_ENV !== 'development') {
 
 ### 1. 处理器组织
 
-按功能模块拆分处理器：
+按功能模块拆分处理器（我们的实际实现）：
 
 ```typescript
-// handlers/products.ts
+// src/mocks/handlers/products.ts
+import { http, HttpResponse } from 'msw';
+
 export const productHandlers = [
-  http.get('/api/products', ...),
-  http.get('/api/products/:id', ...),
+  // 获取商品列表
+  http.get('/api/products', ({ request }) => {
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = parseInt(url.searchParams.get('limit') || '10');
+    
+    console.log(`[MSW] 获取商品列表 - 页码: ${page}, 每页: ${limit}`);
+    
+    // 分页逻辑...
+    return HttpResponse.json({
+      data: paginatedProducts,
+      pagination: { page, limit, total, totalPages }
+    });
+  }),
+  
+  // 获取商品详情
+  http.get('/api/products/:id', ({ params }) => {
+    console.log(`[MSW] 获取商品详情 - ID: ${params.id}`);
+    return HttpResponse.json({ data: product });
+  }),
 ];
 
-// handlers/cart.ts  
+// src/mocks/handlers/cart.ts
 export const cartHandlers = [
-  http.post('/api/cart', ...),
-  http.put('/api/cart/:id', ...),
+  // 获取购物车
+  http.get('/api/cart', () => {
+    console.log('[MSW] 获取购物车列表');
+    return HttpResponse.json({ data: mockCartItems });
+  }),
+  
+  // 添加到购物车
+  http.post('/api/cart', async ({ request }) => {
+    console.log('[MSW] 添加到购物车');
+    return HttpResponse.json({ success: true });
+  }),
 ];
 
-// handlers/index.ts
+// src/mocks/handlers/user.ts
+export const userHandlers = [
+  // 用户登录
+  http.post('/api/auth/login', async ({ request }) => {
+    console.log('[MSW] 用户登录');
+    return HttpResponse.json({ success: true, token: 'mock_token' });
+  }),
+];
+
+// src/mocks/handlers.ts - 主入口文件
+import { productHandlers } from './handlers/products';
+import { cartHandlers } from './handlers/cart';
+import { userHandlers } from './handlers/user';
+
 export const handlers = [
-  ...productHandlers,
-  ...cartHandlers,
+  ...productHandlers,  // 商品相关API
+  ...cartHandlers,     // 购物车相关API
+  ...userHandlers,     // 用户相关API
 ];
 ```
 
