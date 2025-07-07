@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, CartItem } from '../../stores/cartStore';
 import StatusBar from '../../components/common/StatusBar';
+import BottomNavigation from '../../components/common/BottomNavigation';
 
 /**
  * 购物车页面组件
@@ -121,7 +122,7 @@ const CartPage: React.FC = () => {
       </div>
       
       {/* 主要内容 */}
-      <div className="p-4 pb-28">
+      <div className="p-4 pb-40">
         {items.length > 0 ? (
           items.map(renderCartItem)
         ) : (
@@ -142,7 +143,7 @@ const CartPage: React.FC = () => {
       
       {/* 底部结算栏 */}
       {items.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+        <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 z-40">
           <div className="px-4 py-3 flex items-center justify-between">
             <div>
               <span className="text-gray-600">合计: </span>
@@ -158,6 +159,7 @@ const CartPage: React.FC = () => {
           </div>
         </div>
       )}
+      <BottomNavigation />
     </div>
   );
 };
