@@ -7,6 +7,7 @@ const WelcomePage = React.lazy(() => import("./pages/onboarding/WelcomePage"));
 const CreateAccountPage = React.lazy(() => import("./pages/auth/CreateAccountPage"));
 const LoginPage = React.lazy(() => import("./pages/auth/LoginPage"));
 const ShopPage = React.lazy(() => import("./pages/shop/ShopPage"));
+const SearchResultPage = React.lazy(() => import("./pages/search/SearchResultPage"));
 const ProductDetailPage = React.lazy(() => import("./pages/product/ProductDetailPage"));
 const CartPage = React.lazy(() => import("./pages/cart/CartPage"));
 const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
@@ -33,6 +34,7 @@ function App() {
           {/* 主要页面使用Layout */}
           <Route path="/" element={<Layout />}>
             <Route path="shop" element={<ShopPage />} />
+            <Route path="search" element={<SearchResultPage />} />
             <Route path="product/:id" element={<ProductDetailPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="profile" element={<ProfilePage />} />

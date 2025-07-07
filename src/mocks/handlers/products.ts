@@ -5,6 +5,40 @@ import { mockProducts, getProductById } from '../../assets/data/mock/products';
 const API_BASE = '/api';
 
 export const productHandlers = [
+  // 搜索商品 - 必须放在 /:id 路由之前！
+  http.get(`${API_BASE}/products/search`, ({ request }) => {
+    const url = new URL(request.url);
+    const query = url.searchParams.get('q') || '';
+    const category = url.searchParams.get('category');
+    
+    console.log(`[MSW] 搜索商品 - 关键词: ${query}, 分类: ${category}`);
+
+    let results = mockProducts;
+
+    if (query) {
+      results = results.filter(p => 
+        p.name.toLowerCase().includes(query.toLowerCase()) ||
+        p.description?.toLowerCase().includes(query.toLowerCase()) ||
+        p.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+      );
+    }
+
+    if (category && category !== 'all') {
+      results = results.filter(p => p.category === category);
+    }
+
+    // 模拟网络延迟
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(HttpResponse.json({
+          data: results,
+          total: results.length,
+          query: query
+        }));
+      }, 200);
+    });
+  }),
+
   // 获取商品列表
   http.get(`${API_BASE}/products`, ({ request }) => {
     const url = new URL(request.url);
@@ -51,7 +85,7 @@ export const productHandlers = [
     });
   }),
 
-  // 获取商品详情
+  // 获取商品详情 - 放在最后，避免匹配到其他路由
   http.get(`${API_BASE}/products/:id`, ({ params }) => {
     const { id } = params;
     console.log(`[MSW] 获取商品详情 - ID: ${id}`);
@@ -67,35 +101,6 @@ export const productHandlers = [
       setTimeout(() => {
         resolve(HttpResponse.json({ data: product }));
       }, 200);
-    });
-  }),
-
-  // 搜索商品
-  http.get(`${API_BASE}/products/search`, ({ request }) => {
-    const url = new URL(request.url);
-    const query = url.searchParams.get('q') || '';
-    const category = url.searchParams.get('category');
-    
-    console.log(`[MSW] 搜索商品 - 关键词: ${query}, 分类: ${category}`);
-
-    let results = mockProducts;
-
-    if (query) {
-      results = results.filter(p => 
-        p.name.toLowerCase().includes(query.toLowerCase()) ||
-        p.description?.toLowerCase().includes(query.toLowerCase()) ||
-        p.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
-      );
-    }
-
-    if (category && category !== 'all') {
-      results = results.filter(p => p.category === category);
-    }
-
-    return HttpResponse.json({
-      data: results,
-      total: results.length,
-      query: query
     });
   })
 ]; 

@@ -88,8 +88,10 @@
 - 上午：商品列表页面完成
   - [x] 列表瀑布流 / 网格布局 Tailwind
   - [x] 商品卡片组件抽离 (图片 / 标题 / 价格)
-  - [ ] 加入 Skeleton loading
+  - [x] 加入 Skeleton loading
   - [x] 点击卡片跳转详情
+  - [x] 创建搜索结果页面
+  - [x] 实现搜索功能跳转
   - [ ] 单元测试 `ProductCard.test.tsx`
 - 下午：商品详情 & 购物车交互
   - [x] `useParams` 取 :id 调用 Mock

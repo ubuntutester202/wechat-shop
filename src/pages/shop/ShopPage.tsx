@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StatusBar from "../../components/common/StatusBar";
 import BottomNavigation from "../../components/common/BottomNavigation";
+import ProductCard from "../../components/ui/ProductCard";
 import {
   mockCategories,
   mockFlashSaleProducts,
@@ -76,10 +77,20 @@ const ShopPage: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
+  // 处理搜索框回车键
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
+  };
+
   // 处理搜索提交
   const handleSearchSubmit = () => {
-    console.log("Search for:", searchQuery);
-    // TODO: 实现搜索功能
+    if (searchQuery.trim()) {
+      console.log("Search for:", searchQuery);
+      // 跳转到搜索结果页面
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
   };
 
   // 处理分类点击
@@ -283,6 +294,7 @@ const ShopPage: React.FC = () => {
               placeholder="Search"
               value={searchQuery}
               onChange={handleSearchChange}
+              onKeyPress={handleSearchKeyPress}
               className="w-full bg-gray-100 rounded-2xl px-4 py-2.5 pr-12 text-sm outline-none focus:bg-gray-50 transition-colors"
               aria-label="搜索商品"
             />
@@ -461,9 +473,12 @@ const ShopPage: React.FC = () => {
           </div>
           <div className="flex space-x-4 overflow-x-auto pb-2">
             {newItems.map((product) => (
-              <div key={product.id} className="flex-shrink-0 w-36">
-                {renderProductCard(product)}
-              </div>
+              <ProductCard
+                key={product.id}
+                product={product}
+                onClick={handleProductClick}
+                className="flex-shrink-0 w-36"
+              />
             ))}
           </div>
         </div>
@@ -490,7 +505,13 @@ const ShopPage: React.FC = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {clothingProducts.map(product => renderProductCard(product))}
+            {clothingProducts.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onClick={handleProductClick}
+              />
+            ))}
           </div>
         </div>
       </div>

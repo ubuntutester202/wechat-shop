@@ -673,3 +673,384 @@ MSW为前端开发提供了一个优雅的API模拟解决方案：
 - `src/main.tsx`：应用入口集成（环境检查和启动）
 
 通过这套配置，我们实现了一个完整的前端开发环境，既能脱离后端独立开发，又能保持与真实API调用的一致性。当后端API准备就绪时，只需要简单地禁用MSW或修改API base URL即可无缝切换。 
+
+# MSW Mock 数据集成深度解析：路由顺序与API设计
+
+## 🎯 为什么需要这个教程？
+
+在开发现代前端应用时，我们经常面临一个现实问题：**前端开发速度往往超过后端API开发进度**。MSW (Mock Service Worker) 正是为了解决这个痛点而生的——它让我们可以在浏览器中拦截真实的网络请求，并返回模拟数据，从而让前端开发完全独立于后端进度。
+
+但是，MSW的强大功能也带来了复杂性。本教程将深入探讨我们在搜索功能开发中遇到的**路由顺序问题**，以及MSW在整个项目中的集成方案。
+
+> **实际案例**：我们在实现商品搜索功能时，发现搜索请求 `/api/products/search` 返回404错误，经过调试发现是被错误匹配到了 `/api/products/:id` 路由。这个问题暴露了MSW路由配置中的一个核心概念。
+
+---
+
+## ⚠️ 路由顺序问题：一个典型的踩坑案例
+
+### 问题现象
+
+在实现搜索功能时，我们发现了一个令人困惑的问题：
+
+```bash
+# 预期行为
+GET /api/products/search?q=卫衣  → 返回搜索结果
+
+# 实际行为  
+GET /api/products/search?q=卫衣  → 404 Not Found
+```
+
+### 问题根源分析
+
+通过浏览器控制台，我们发现了问题的根源：
+
+```
+[MSW] 获取商品详情 - ID: search
+Failed to load resource: the server responded with a status of 404 (Not Found)
+```
+
+**问题所在**：MSW把 `/api/products/search` 错误地匹配到了 `/api/products/:id` 路由！
+
+### 路由匹配机制
+
+MSW的路由匹配遵循**从上到下的顺序匹配**原则。让我们看看有问题的配置：
+
+```tsx
+// ❌ 有问题的路由顺序
+export const productHandlers = [
+  // 1. 通用商品列表
+  http.get(`${API_BASE}/products`, ({ request }) => { /* ... */ }),
+  
+  // 2. 商品详情 - 这里会匹配 /products/任何内容
+  http.get(`${API_BASE}/products/:id`, ({ params }) => { /* ... */ }),
+  
+  // 3. 搜索 - 永远不会被匹配到！
+  http.get(`${API_BASE}/products/search`, ({ request }) => { /* ... */ })
+];
+```
+
+当请求 `/api/products/search` 时：
+1. 第一个路由 `/api/products` 不匹配（路径不同）
+2. 第二个路由 `/api/products/:id` **匹配成功**！（`:id` 参数被赋值为 "search"）
+3. 第三个路由永远不会被检查
+
+### 解决方案：路由顺序重排
+
+```tsx
+// ✅ 正确的路由顺序
+export const productHandlers = [
+  // 1. 搜索商品 - 最具体的路由放在前面
+  http.get(`${API_BASE}/products/search`, ({ request }) => { /* ... */ }),
+  
+  // 2. 通用商品列表
+  http.get(`${API_BASE}/products`, ({ request }) => { /* ... */ }),
+  
+  // 3. 商品详情 - 最通用的路由放在最后
+  http.get(`${API_BASE}/products/:id`, ({ params }) => { /* ... */ })
+];
+```
+
+**核心原则**：**从具体到通用，从特殊到一般**
+
+---
+
+## 🛠️ 商品Handlers深度解析
+
+### 搜索Handler的完整实现
+
+```tsx
+// 搜索商品 - 必须放在 /:id 路由之前！
+http.get(`${API_BASE}/products/search`, ({ request }) => {
+  const url = new URL(request.url);
+  const query = url.searchParams.get('q') || '';
+  const category = url.searchParams.get('category');
+  
+  console.log(`[MSW] 搜索商品 - 关键词: ${query}, 分类: ${category}`);
+
+  let results = mockProducts;
+
+  // 多字段模糊搜索
+  if (query) {
+    results = results.filter(p => 
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.description?.toLowerCase().includes(query.toLowerCase()) ||
+      p.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    );
+  }
+
+  // 分类过滤
+  if (category && category !== 'all') {
+    results = results.filter(p => p.category === category);
+  }
+
+  // 模拟网络延迟，提升真实感
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(HttpResponse.json({
+        data: results,
+        total: results.length,
+        query: query
+      }));
+    }, 200);
+  });
+})
+```
+
+**技术亮点分析**：
+
+1. **URL参数解析**：使用 `new URL(request.url)` 优雅地解析查询参数
+2. **多字段搜索**：在商品名称、描述、标签中进行模糊匹配
+3. **数据过滤链**：先按关键词过滤，再按分类过滤，逻辑清晰
+4. **真实的用户体验**：添加200ms延迟模拟真实网络环境
+5. **标准化响应**：返回 `{data, total, query}` 结构，便于前端处理
+
+### 商品详情Handler的边界处理
+
+```tsx
+// 获取商品详情 - 放在最后，避免匹配到其他路由
+http.get(`${API_BASE}/products/:id`, ({ params }) => {
+  const { id } = params;
+  console.log(`[MSW] 获取商品详情 - ID: ${id}`);
+  
+  const product = getProductById(id as string);
+  
+  // 404处理
+  if (!product) {
+    return new HttpResponse(null, { status: 404 });
+  }
+
+  // 模拟网络延迟
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(HttpResponse.json({ data: product }));
+    }, 200);
+  });
+})
+```
+
+**错误处理最佳实践**：
+- **显式404**：当商品不存在时，返回标准的404响应
+- **类型安全**：使用 `id as string` 进行类型断言
+- **日志追踪**：console.log帮助调试和监控
+
+---
+
+## 🔄 请求-响应完整生命周期
+
+### 从前端发起搜索到获得结果
+
+```mermaid
+sequenceDiagram
+    participant User as 用户
+    participant Browser as 浏览器
+    participant MSW as MSW Service Worker
+    participant Handler as Search Handler
+    participant Data as Mock Data
+    
+    User->>Browser: 在搜索框输入"卫衣"
+    Browser->>Browser: 构造 GET /api/products/search?q=卫衣
+    Browser->>MSW: 发送HTTP请求
+    
+    Note over MSW: 路由匹配：按顺序检查handlers
+    MSW->>Handler: 匹配到 /products/search 路由
+    
+    Handler->>Handler: 解析查询参数 q=卫衣
+    Handler->>Data: 在mockProducts中搜索
+    Data-->>Handler: 返回匹配的商品列表
+    
+    Handler->>Handler: 添加200ms延迟（模拟真实网络）
+    Handler-->>MSW: 返回 HttpResponse.json({data, total, query})
+    MSW-->>Browser: 返回200 OK + JSON数据
+    Browser-->>User: 展示搜索结果页面
+```
+
+### 错误场景：路由顺序错误时的流程
+
+```mermaid
+sequenceDiagram
+    participant Browser as 浏览器
+    participant MSW as MSW (错误配置)
+    participant ProductHandler as Product Detail Handler
+    participant Data as Mock Data
+    
+    Browser->>MSW: GET /api/products/search?q=卫衣
+    
+    Note over MSW: ❌ 错误匹配到 /products/:id
+    MSW->>ProductHandler: 调用详情handler，id="search"
+    
+    ProductHandler->>Data: getProductById("search")
+    Data-->>ProductHandler: 返回 null（商品不存在）
+    
+    ProductHandler-->>MSW: 返回 404 Not Found
+    MSW-->>Browser: 404错误
+    
+    Note over Browser: 前端显示搜索失败
+```
+
+---
+
+## 🎯 最佳实践与开发建议
+
+### 1. 路由设计原则
+
+```tsx
+// ✅ 推荐的路由顺序模式
+export const apiHandlers = [
+  // 第一层：最具体的路径（完全匹配）
+  http.get('/api/products/search', searchHandler),
+  http.get('/api/products/categories', categoriesHandler),
+  http.get('/api/products/recommendations', recommendationsHandler),
+  
+  // 第二层：带查询参数的通用路径
+  http.get('/api/products', listHandler),
+  
+  // 第三层：参数化路径（最通用）
+  http.get('/api/products/:id', detailHandler),
+];
+```
+
+### 2. Handler函数的模块化
+
+```tsx
+// 推荐：将复杂的handler逻辑提取为独立函数
+const createSearchHandler = () => {
+  return http.get(`${API_BASE}/products/search`, async ({ request }) => {
+    const searchParams = extractSearchParams(request);
+    const results = await performSearch(searchParams);
+    const response = formatSearchResponse(results, searchParams);
+    return createDelayedResponse(response, 200);
+  });
+};
+
+// 可复用的工具函数
+const extractSearchParams = (request: Request) => { /* ... */ };
+const performSearch = (params: SearchParams) => { /* ... */ };
+const formatSearchResponse = (results: Product[], params: SearchParams) => { /* ... */ };
+const createDelayedResponse = (data: any, delay: number) => { /* ... */ };
+```
+
+### 3. 调试与监控
+
+```tsx
+// 添加请求日志中间件
+const withLogging = (handler: ResponseResolver) => {
+  return (req: RequestType) => {
+    console.log(`[MSW] ${req.request.method} ${req.request.url}`);
+    const start = Date.now();
+    
+    const result = handler(req);
+    
+    if (result instanceof Promise) {
+      return result.then(response => {
+        console.log(`[MSW] 响应耗时: ${Date.now() - start}ms`);
+        return response;
+      });
+    }
+    
+    return result;
+  };
+};
+
+// 使用
+http.get('/api/products/search', withLogging(searchHandler))
+```
+
+### 4. 测试友好的配置
+
+```tsx
+// 支持不同环境的handler配置
+export const createProductHandlers = (config: MockConfig) => [
+  http.get(`${config.apiBase}/products/search`, ({ request }) => {
+    const results = config.enableFuzzySearch 
+      ? performFuzzySearch(request)
+      : performExactSearch(request);
+    
+    return createDelayedResponse(results, config.networkDelay);
+  }),
+  // ...其他handlers
+];
+
+// 开发环境
+export const productHandlers = createProductHandlers({
+  apiBase: '/api',
+  enableFuzzySearch: true,
+  networkDelay: 200
+});
+
+// 测试环境
+export const testProductHandlers = createProductHandlers({
+  apiBase: '/api',
+  enableFuzzySearch: false,
+  networkDelay: 0
+});
+```
+
+---
+
+## 🚀 故障排查指南
+
+### 常见问题诊断流程
+
+1. **路由不匹配问题**
+   ```bash
+   # 检查控制台日志
+   [MSW] GET /api/products/search (404 Not Found)
+   
+   # 解决方案：检查handler顺序，确保具体路由在通用路由之前
+   ```
+
+2. **参数解析问题**
+   ```tsx
+   // 调试技巧：添加详细日志
+   http.get('/api/products/search', ({ request }) => {
+     const url = new URL(request.url);
+     console.log('完整URL:', url.href);
+     console.log('查询参数:', Object.fromEntries(url.searchParams));
+     // ...
+   });
+   ```
+
+3. **异步问题**
+   ```tsx
+   // 确保异步handler正确返回Promise
+   http.get('/api/products', async ({ request }) => {
+     const data = await fetchMockData();
+     return HttpResponse.json(data); // ✅ 正确
+     // return data; // ❌ 错误
+   });
+   ```
+
+### 性能优化建议
+
+1. **延迟策略**：为不同API设置不同的模拟延迟，反映真实的性能特征
+2. **数据缓存**：对于大型数据集，考虑在handler中实现缓存机制
+3. **条件加载**：仅在需要时加载大型mock数据文件
+
+---
+
+## 📚 总结与展望
+
+通过这次深度分析，我们学到了：
+
+1. **MSW路由顺序的重要性**：具体路由必须放在通用路由之前
+2. **系统性的错误排查方法**：从现象到根因的追踪技巧
+3. **模块化的Handler设计**：如何组织大型项目的mock代码
+4. **调试友好的开发实践**：日志、错误处理、性能模拟
+
+这套MSW配置系统现在支持：
+- ✅ 商品搜索功能
+- ✅ 商品列表分页
+- ✅ 商品详情获取
+- ✅ 购物车操作
+- ✅ 用户管理
+
+随着项目功能的扩展，我们可以按照相同的模式继续添加新的API handler，确保前端开发始终保持高效和独立。
+
+---
+
+## 🔗 相关文档
+
+- [项目概述](../overview.md)
+- [如何运行Vite+React应用](./how-vite-react-app-works.md)
+- [商店页面功能解析](./how-shop-page-works.md)
+- [MSW官方文档](https://mswjs.io/docs/) 
