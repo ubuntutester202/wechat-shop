@@ -61,7 +61,7 @@
 #### Day 2
 
 - 上午：UI/UX 设计原型
-  - [ ] 使用 Figma 模板完成首页 / 商品卡片 / 购物车弹窗等。
+  - [x] 使用 Figma 模板完成首页 / 商品卡片 / 购物车 / 配置 等。
 - 下午：前端脚手架搭建
   - [x] `pnpm create vite@latest wechat-shop --template react-ts`
   - [x] `pnpm add -D tailwindcss postcss autoprefixer` 并执行 `npx tailwindcss init -p`
@@ -72,31 +72,29 @@
 #### Day 3
 
 - 上午：路由 & 布局体系
-  - [ ] `pnpm add react-router-dom@6`
-  - [ ] 设置主布局 `Layout.tsx` (Header, Footer, Outlet)
-  - [ ] 配置路由：`/`, `/product/:id`, `/cart`, `/checkout`, `/orders`
+  - [x] `pnpm add react-router-dom@6`
+  - [x] 设置主布局 `Layout.tsx` (Header, Footer, Outlet)
+  - [ ] 配置路由：`/`, `/product/:id`, `/cart`, `/profile`, `/message`
   - [ ] 加入懒加载 `React.lazy`
-  - [ ] 在 README 绘制路由表
 - 下午：状态管理 & Mock 方案
-  - [ ] `pnpm add zustand` 建立 `useCartStore`
+  - [x] `pnpm add zustand` 建立 `useCartStore`
   - [ ] `pnpm add -D msw`
   - [ ] 编写 `src/mocks/handlers.ts` 商品列表 / 详情 / 购物车接口
   - [ ] service worker 注册开关（仅 dev 环境）
-  - [ ] 用 Mock 数据渲染首页列表
+  - [x] 用 Mock 数据渲染首页列表
 
 #### Day 4
 
 - 上午：商品列表页面完成
-  - [ ] 列表瀑布流 / 网格布局 Tailwind
-  - [ ] 商品卡片组件抽离 (图片 / 标题 / 价格)
+  - [x] 列表瀑布流 / 网格布局 Tailwind
+  - [x] 商品卡片组件抽离 (图片 / 标题 / 价格)
   - [ ] 加入 Skeleton loading
-  - [ ] 点击卡片跳转详情
+  - [x] 点击卡片跳转详情
   - [ ] 单元测试 `ProductCard.test.tsx`
 - 下午：商品详情 & 购物车交互
-  - [ ] `useParams` 取 :id 调用 Mock
+  - [x] `useParams` 取 :id 调用 Mock
   - [ ] 数量加减、规格选择
-  - [ ] `addToCart(product)` 调用 zustand
-  - [ ] 侧边抽屉/弹窗展示购物车
+  - [x] `addToCart(product)` 调用 zustand
   - [ ] 购物车数量徽标联动
 
 #### Day 5
