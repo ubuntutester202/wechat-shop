@@ -35,12 +35,12 @@ const BottomNavigation: React.FC = () => {
       )
     },
     {
-      id: 'orders',
-      path: '/orders',
-      label: 'Orders',
+      id: 'message',
+      path: '/message',
+      label: 'message',
       icon: (active: boolean) => (
         <svg className={`w-6 h-6 mb-1 ${active ? 'text-blue-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8C3 5.238 5.238 3 8 3h8c2.762 0 5 2.238 5 5v8c0 2.762-2.238 5-5 5H8l-5 5V8z"></path>
         </svg>
       )
     },
