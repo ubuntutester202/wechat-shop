@@ -10,7 +10,19 @@ import BottomNavigation from '../../components/common/BottomNavigation';
  */
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
-  const { items, totalItems, totalPrice, updateQuantity, removeItem, clearCart } = useCartStore();
+  const { 
+    items, 
+    totalItems, 
+    totalPrice, 
+    selectedTotalItems,
+    selectedTotalPrice,
+    updateQuantity, 
+    removeItem, 
+    clearCart,
+    toggleItemSelection,
+    toggleAllSelection,
+    getSelectedItems
+  } = useCartStore();
 
   // 处理返回
   const handleGoBack = () => {
@@ -32,9 +44,52 @@ const CartPage: React.FC = () => {
     navigate(`/product/${productId}`);
   };
 
+  // 处理商品勾选
+  const handleItemSelection = (itemId: string) => {
+    toggleItemSelection(itemId);
+  };
+
+  // 处理全选
+  const handleSelectAll = () => {
+    toggleAllSelection();
+  };
+
+  // 跳转到结算页面
+  const handleCheckout = () => {
+    const selectedItems = getSelectedItems();
+    if (selectedItems.length === 0) {
+      alert('请选择要结算的商品');
+      return;
+    }
+    navigate('/checkout');
+  };
+
+  // 检查是否全选
+  const isAllSelected = items.length > 0 && items.every(item => item.selected);
+  const hasSelectedItems = items.some(item => item.selected);
+
   // 渲染购物车项目
   const renderCartItem = (item: CartItem) => (
     <div key={item.id} className="flex items-start gap-4 bg-white p-4 rounded-lg shadow-sm mb-3">
+      {/* 选择框 */}
+      <div className="flex items-center pt-2">
+        <button
+          onClick={() => handleItemSelection(item.id)}
+          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+            item.selected 
+              ? 'border-red-500 bg-red-500' 
+              : 'border-gray-300'
+          }`}
+          title={item.selected ? '取消选择' : '选择商品'}
+        >
+          {item.selected && (
+            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          )}
+        </button>
+      </div>
+      
       {/* 商品图片 */}
       <div 
         className="w-24 h-24 rounded-md bg-gray-200 cursor-pointer"
@@ -119,6 +174,33 @@ const CartPage: React.FC = () => {
             清空
           </button>
         </div>
+        
+        {/* 全选栏 */}
+        {items.length > 0 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleSelectAll}
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  isAllSelected 
+                    ? 'border-red-500 bg-red-500' 
+                    : 'border-gray-300'
+                }`}
+                title={isAllSelected ? '取消全选' : '全选'}
+              >
+                {isAllSelected && (
+                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </button>
+              <span className="text-sm text-gray-900">全选</span>
+            </div>
+            <div className="text-sm text-gray-500">
+              已选择 {selectedTotalItems} 件商品
+            </div>
+          </div>
+        )}
       </div>
       
       {/* 主要内容 */}
@@ -144,17 +226,25 @@ const CartPage: React.FC = () => {
       {/* 底部结算栏 */}
       {items.length > 0 && (
         <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 z-40">
-          <div className="px-4 py-3 flex items-center justify-between">
-            <div>
-              <span className="text-gray-600">合计: </span>
-              <span className="font-bold text-red-600 text-xl">¥{totalPrice.toFixed(2)}</span>
+          <div className="px-4 py-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm text-gray-600">
+                合计 ({selectedTotalItems} 件):
+              </div>
+              <div className="text-right">
+                <span className="font-bold text-red-600 text-xl">¥{selectedTotalPrice.toFixed(2)}</span>
+              </div>
             </div>
             <button
-              onClick={() => { /* TODO: 跳转到结算页面 */ alert('跳转到结算页面'); }}
-              className="bg-red-500 text-white font-medium py-3 px-8 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
-              disabled={totalItems === 0}
+              onClick={handleCheckout}
+              className={`w-full font-medium py-3 px-8 rounded-lg transition-colors ${
+                hasSelectedItems
+                  ? 'bg-red-500 text-white hover:bg-red-600'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+              disabled={!hasSelectedItems}
             >
-              结算 ({totalItems})
+              结算 ({selectedTotalItems})
             </button>
           </div>
         </div>

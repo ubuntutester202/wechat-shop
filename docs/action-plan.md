@@ -102,11 +102,11 @@
 #### Day 5
 
 - 上午：结算&地址表单原型
-  - [ ] 页面 `/checkout` 骨架
-  - [ ] 使用 React Hook Form 创建地址输入
-  - [ ] 校验规则 (手机号, 邮编)
-  - [ ] Mock 订单金额计算接口
-  - [ ] 按钮"去支付"显示未接入提示
+  - [x] 页面 `/checkout` 骨架
+  - [x] 使用 React Hook Form 创建地址输入
+  - [x] 校验规则 (手机号，不搞复杂了，目前只是UI设计阶段)
+  - [x] Mock 订单金额计算接口
+  - [x] 按钮"去支付"显示未接入提示
 - 下午：单元/集成测试搭建
   - [ ] `pnpm add -D jest @testing-library/react @testing-library/jest-dom`
   - [ ] 配置 `vitest` 亦可选

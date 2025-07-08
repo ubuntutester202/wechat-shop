@@ -11,6 +11,7 @@ export interface CartItem {
   quantity: number;
   selectedVariants: { [key: string]: string }; // 选中的变体，如 { color: 'black', size: 'M' }
   stock: number;
+  selected: boolean; // 新增：是否选中
 }
 
 // 购物车状态接口
@@ -18,13 +19,20 @@ interface CartStore {
   items: CartItem[];
   totalItems: number;
   totalPrice: number;
+  selectedTotalItems: number; // 新增：选中商品总数
+  selectedTotalPrice: number; // 新增：选中商品总价
   isLoading: boolean;
   
   // 操作方法
-  addItem: (item: Omit<CartItem, 'id'>) => void;
+  addItem: (item: Omit<CartItem, 'id' | 'selected'>) => void;
   removeItem: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
+  
+  // 新增：勾选相关方法
+  toggleItemSelection: (itemId: string) => void;
+  toggleAllSelection: () => void;
+  getSelectedItems: () => CartItem[];
   
   // 计算方法
   calculateTotals: () => void;
@@ -48,6 +56,8 @@ export const useCartStore = create<CartStore>()(
       items: [],
       totalItems: 0,
       totalPrice: 0,
+      selectedTotalItems: 0, // 新增：选中商品总数
+      selectedTotalPrice: 0, // 新增：选中商品总价
       isLoading: false,
 
       addItem: (newItem) => {
@@ -82,7 +92,8 @@ export const useCartStore = create<CartStore>()(
           // 如果不存在，添加新项
           const cartItem: CartItem = {
             ...newItem,
-            id: itemId
+            id: itemId,
+            selected: true // 新添加的商品默认选中
           };
           
           set({ items: [...state.items, cartItem] });
@@ -122,7 +133,40 @@ export const useCartStore = create<CartStore>()(
       },
 
       clearCart: () => {
-        set({ items: [], totalItems: 0, totalPrice: 0 });
+        set({ items: [], totalItems: 0, totalPrice: 0, selectedTotalItems: 0, selectedTotalPrice: 0 });
+      },
+
+      // 新增：切换单个商品选中状态
+      toggleItemSelection: (itemId) => {
+        const state = get();
+        const updatedItems = state.items.map(item => {
+          if (item.id === itemId) {
+            return { ...item, selected: !item.selected };
+          }
+          return item;
+        });
+        
+        set({ items: updatedItems });
+        get().calculateTotals();
+      },
+
+      // 新增：全选/反选
+      toggleAllSelection: () => {
+        const state = get();
+        const hasUnselectedItems = state.items.some(item => !item.selected);
+        
+        const updatedItems = state.items.map(item => ({
+          ...item,
+          selected: hasUnselectedItems
+        }));
+        
+        set({ items: updatedItems });
+        get().calculateTotals();
+      },
+
+      // 新增：获取选中的商品
+      getSelectedItems: () => {
+        return get().items.filter(item => item.selected);
       },
 
       calculateTotals: () => {
@@ -130,7 +174,12 @@ export const useCartStore = create<CartStore>()(
         const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
         const totalPrice = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         
-        set({ totalItems, totalPrice });
+        // 计算选中商品的统计
+        const selectedItems = state.items.filter(item => item.selected);
+        const selectedTotalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+        const selectedTotalPrice = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        set({ totalItems, totalPrice, selectedTotalItems, selectedTotalPrice });
       },
 
       getCartItemByProduct: (productId, variants) => {
@@ -144,7 +193,9 @@ export const useCartStore = create<CartStore>()(
       partialize: (state) => ({
         items: state.items,
         totalItems: state.totalItems,
-        totalPrice: state.totalPrice
+        totalPrice: state.totalPrice,
+        selectedTotalItems: state.selectedTotalItems,
+        selectedTotalPrice: state.selectedTotalPrice
       })
     }
   )
