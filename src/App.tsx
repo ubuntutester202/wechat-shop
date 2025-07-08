@@ -30,12 +30,12 @@ function App() {
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/auth/register" element={<CreateAccountPage />} />
           <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="product/:id" element={<ProductDetailPage />} />
           
           {/* 主要页面使用Layout */}
           <Route path="/" element={<Layout />}>
             <Route path="shop" element={<ShopPage />} />
             <Route path="search" element={<SearchResultPage />} />
-            <Route path="product/:id" element={<ProductDetailPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="message" element={<MessagePage />} />

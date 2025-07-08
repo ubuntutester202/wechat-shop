@@ -92,7 +92,7 @@
   - [x] 点击卡片跳转详情
   - [x] 创建搜索结果页面
   - [x] 实现搜索功能跳转
-  - [ ] 单元测试 `ProductCard.test.tsx`
+  - [x] 单元测试 `ProductCard.test.tsx`
 - 下午：商品详情 & 购物车交互
   - [x] `useParams` 取 :id 调用 Mock
   - [ ] 数量加减、规格选择
