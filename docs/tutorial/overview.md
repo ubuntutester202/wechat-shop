@@ -12,7 +12,8 @@
 - [**个人中心架构解析：从路由到交互的完整实现指南**](./how-profile-page-works.md): 深入解析Profile页面的模块化架构设计、分层布局策略、订单管理系统集成以及完整的用户交互体验实现，展示现代电商应用个人中心页面的最佳实践。
 - [**MSW Mock 数据集成深度解析：路由顺序与API设计**](./how-msw-mock-integration-works.md): 深入探讨MSW路由配置中的核心概念，特别是路由顺序问题的排查与解决方案。通过实际案例分析，全面解析productHandlers的设计模式、错误处理机制和最佳实践，帮助开发者构建稳定可靠的前端mock系统。
 - [**搜索体验的艺术：构建高效、美观的商品搜索结果页**](./how-search-result-page-works.md): 全面解析一个现代化搜索结果页的前端架构，覆盖从原子化组件（商品卡片、骨架屏）到页面级编排（Tailwind网格布局、状态管理）的全过程。
-- [**ProductCard 组件单元测试完全指南**](./how-unit-testing-works.md): 深入解析单元测试的工作原理，从Vitest环境配置到具体测试用例实现，详细讲解测试运行逻辑、结果判读和最佳实践，为前端组件测试提供完整的技术指南。
+- [**ProductCard 组件单元测试完全指南**](./how-ProductCard-unit-testing-works.md): 深入解析单元测试的工作原理，从Vitest环境配置到具体测试用例实现，详细讲解测试运行逻辑、结果判读和最佳实践，为前端组件测试提供完整的技术指南。
 - [**React 进阶语法与特性深度学习：ProductSpecModal 组件案例解析**](./how-product-spec-modal-works.md): 通过一个真实的商品规格选择弹框组件，深入学习 React 的核心概念、TypeScript 集成、useState/useEffect Hooks、复杂状态管理、组件通信、条件渲染、函数式编程等现代前端开发的最佳实践。 
 - [**结算功能实现教程**](./how-checkout-functionality-works.md): 介绍结算功能的关键技术和新特性，包括Zustand状态管理的进阶用法、React Hook Form表单处理、MSW Mock扩展，以及组件状态与UI交互的最佳实践。
 - [**GitHub Actions CI/CD 完全指南**](./how-github-actions-cicd-works.md): 深入解析GitHub Actions持续集成/持续部署的完整实现，覆盖工作流配置、缓存策略、测试自动化、质量保障体系以及故障排除，为项目提供自动化质量保障的最佳实践指南。
+- [**单元测试教程**](./how-unit-testing-works.md): 了解前端测试方案。

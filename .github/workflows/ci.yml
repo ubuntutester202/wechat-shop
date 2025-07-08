@@ -64,39 +64,45 @@ jobs:
         path: coverage/
         retention-days: 7
 
-  e2e-tests:
-    name: 端到端测试
-    runs-on: ubuntu-latest
-    needs: test
-    
-    steps:
-    - name: 检出代码
-      uses: actions/checkout@v4
-      
-    - name: 设置 Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'npm'
-        
-    - name: 安装 pnpm
-      uses: pnpm/action-setup@v3
-      with:
-        version: 10
-        
-    - name: 安装依赖
-      run: pnpm install --frozen-lockfile
-      
-    - name: 安装 Playwright 浏览器
-      run: pnpm exec playwright install --with-deps
-      
-    - name: 运行 Playwright 测试
-      run: pnpm run test
-      
-    - name: 上传 Playwright 报告
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30 
+  # 注释：E2E测试暂时禁用，原因：
+  # 1. 早期开发阶段，变化频繁，E2E测试维护成本高
+  # 2. 安装Playwright浏览器耗时较长（约5-10分钟）
+  # 3. 当前只有基础测试，收益相对较低
+  # 建议：当核心功能稳定后再启用，专注测试关键用户流程
+  
+  # e2e-tests:
+  #   name: 端到端测试
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   
+  #   steps:
+  #   - name: 检出代码
+  #     uses: actions/checkout@v4
+  #     
+  #   - name: 设置 Node.js
+  #     uses: actions/setup-node@v4
+  #     with:
+  #       node-version: 20.x
+  #       cache: 'npm'
+  #       
+  #   - name: 安装 pnpm
+  #     uses: pnpm/action-setup@v3
+  #     with:
+  #       version: 10
+  #       
+  #   - name: 安装依赖
+  #     run: pnpm install --frozen-lockfile
+  #     
+  #   - name: 安装 Playwright 浏览器
+  #     run: pnpm exec playwright install --with-deps
+  #     
+  #   - name: 运行 Playwright 测试
+  #     run: pnpm run test
+  #     
+  #   - name: 上传 Playwright 报告
+  #     uses: actions/upload-artifact@v4
+  #     if: always()
+  #     with:
+  #       name: playwright-report
+  #       path: playwright-report/
+  #       retention-days: 30 
