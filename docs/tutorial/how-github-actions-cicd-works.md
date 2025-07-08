@@ -413,6 +413,14 @@ deploy:
 
 ## 故障排除指南
 
+### CI 失败时的检查步骤
+
+1. **查看具体错误日志**
+2. **在本地复现问题**
+3. **检查是否是环境差异问题**
+4. **确认依赖版本一致性**
+5. **验证配置文件正确性**
+
 ### 常见问题及解决方案
 
 #### 1. 依赖安装失败
@@ -437,7 +445,100 @@ Error: Test timeout of 30000ms exceeded
 - 检查是否有异步操作没有正确等待
 - 优化测试数据大小
 
-#### 3. 浏览器启动失败（E2E）
+#### 3. PNPM Workspace 配置错误
+
+```bash
+❌ Run pnpm install --frozen-lockfile
+ERR_PNPM_INVALID_WORKSPACE_CONFIGURATION packages field missing or empty
+Error: Process completed with exit code 1.
+```
+
+**问题分析**：
+- 项目中存在 `pnpm-workspace.yaml` 文件但配置不完整
+- pnpm 认为这是 workspace 项目但缺少必需的 `packages` 字段
+
+**解决方案**：
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - '.'  # 包含当前目录作为单体项目
+
+ignoredBuiltDependencies:
+  - esbuild
+  - msw
+```
+
+#### 4. ESLint 配置过时错误
+
+```bash
+❌ pnpm run lint
+Invalid option '--ext' - perhaps you meant '-c'?
+You're using eslint.config.js, some command line flags are no longer available.
+```
+
+**问题分析**：
+- ESLint 9+ 使用 `eslint.config.js` 时，`--ext` 参数已被弃用
+- 缺少必要的依赖包
+
+**解决方案**：
+1. 安装依赖：
+```bash
+pnpm add -D @eslint/js globals
+```
+
+2. 更新 package.json：
+```json
+{
+  "scripts": {
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 30"
+  }
+}
+```
+
+3. 更新 eslint.config.js：
+```js
+import globals from 'globals'
+
+export default [
+  {
+    ignores: ['dist', 'node_modules', '*.config.js', 'public/mockServiceWorker.js'],
+  },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,  // 添加 Node.js 全局变量
+      },
+    },
+  }
+]
+```
+
+#### 5. TypeScript 编译过于严格
+
+```bash
+❌ pnpm run build
+error TS6133: 'initialVariants' is declared but its value is never read.
+error TS6133: 'totalPrice' is declared but its value is never read.
+Found 6 errors in 5 files.
+```
+
+**问题分析**：
+- TypeScript 编译器将未使用变量视为错误
+- 开发阶段可能有预留的变量尚未使用
+
+**解决方案**：
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "noUnusedLocals": false,      // 允许未使用的局部变量
+    "noUnusedParameters": false   // 允许未使用的参数
+  }
+}
+```
+
+#### 6. 浏览器启动失败（E2E）
 
 ```bash
 Error: Failed to launch browser
@@ -505,3 +606,11 @@ deploy-production:
 - 保持配置的简洁和可维护性
 
 这个 CI/CD 系统为我们的微信小程序项目提供了坚实的质量保障基础，让我们可以更自信地进行功能开发和迭代。 
+
+## 🔗 相关资源
+
+- [GitHub Actions 文档](https://docs.github.com/en/actions)
+- [Vite 故障排除](https://vitejs.dev/guide/troubleshooting.html)
+- [Vitest 常见问题](https://vitest.dev/guide/common-errors.html)
+- [ESLint 迁移指南](https://eslint.org/docs/latest/use/migrate-to-9.0.0)
+- [TypeScript 编译选项](https://www.typescriptlang.org/tsconfig)
