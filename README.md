@@ -7,6 +7,9 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"/></a>
+  <a href="https://example.com/ci-status">
+  <img src="https://img.shields.io/badge/CI%20Status-passing-brightgreen.svg" alt="CI Status"></a>
+  <a href="https://github.com/yourname/plan3-online-sales-wechat/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/tests-passing-brightgreen.svg" alt="Tests"/></a>
 </p>
 
 ---

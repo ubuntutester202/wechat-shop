@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import ProductCard from './ProductCard';
 import { Product } from '../../assets/data/mock/products';
 
@@ -29,6 +29,10 @@ const mockProductWithoutOptionalFields: Product = {
 };
 
 describe('ProductCard', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('应该正确渲染商品基本信息', () => {
     render(<ProductCard product={mockProduct} />);
     

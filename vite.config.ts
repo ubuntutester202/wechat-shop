@@ -32,5 +32,26 @@ export default defineConfig({
     include: ['src/**/*.{test,spec}.{js,ts,jsx,tsx}'],
     // 排除 playwright 测试
     exclude: ['tests/**/*', 'node_modules/**/*'],
+    // 限制并发数以避免内存问题
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true
+      }
+    },
+    // 测试覆盖率配置
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/test/',
+        '**/*.test.{ts,tsx}',
+        '**/*.spec.{ts,tsx}',
+        'src/mocks/',
+        'src/main.tsx',
+        'vite.config.ts',
+      ],
+    },
   },
 }) 

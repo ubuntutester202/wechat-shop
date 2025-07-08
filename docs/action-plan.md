@@ -108,11 +108,11 @@
   - [x] Mock 订单金额计算接口
   - [x] 按钮"去支付"显示未接入提示
 - 下午：单元/集成测试搭建
-  - [ ] `pnpm add -D jest @testing-library/react @testing-library/jest-dom`
-  - [ ] 配置 `vitest` 亦可选
-  - [ ] 编写首页渲染 smoke test
-  - [ ] 配置 CI：GitHub Actions 触发 test
-  - [ ] README 更新测试 badge
+  - [x] `pnpm add -D @testing-library/react @testing-library/jest-dom vitest`
+  - [x] 配置 `vitest` 作为主要测试框架（推荐：与Vite更好集成）
+  - [x] 编写首页渲染 smoke test
+  - [x] 配置 CI：GitHub Actions 触发 test
+  - [x] README 更新测试 badge
 
 #### Day 6
 
