@@ -5,7 +5,7 @@ interface ProductSpecModalProps {
   product: Product;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (selectedVariants: { [key: string]: string }, quantity: number) => void;
+  onConfirm: (selectedVariants: { [key: string]: string }, quantity: number, finalPrice: number) => void;
   confirmText: string; // "加入购物车" 或 "立即购买"
   initialVariants?: { [key: string]: string };
   initialQuantity?: number;
@@ -103,7 +103,7 @@ const ProductSpecModal: React.FC<ProductSpecModalProps> = ({
       }
     }
 
-    onConfirm(selectedVariants, quantity);
+    onConfirm(selectedVariants, quantity, currentPrice);
     onClose();
   };
 

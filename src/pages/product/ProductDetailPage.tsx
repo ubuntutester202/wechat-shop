@@ -90,14 +90,14 @@ const ProductDetailPage: React.FC = () => {
   };
 
   // 处理规格选择确认
-  const handleSpecConfirm = (selectedVariants: { [key: string]: string }, quantity: number) => {
+  const handleSpecConfirm = (selectedVariants: { [key: string]: string }, quantity: number, finalPrice: number) => {
     if (!product) return;
 
     // 添加到购物车
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
+      price: finalPrice, // 使用计算后的最终价格
       image: product.image,
       quantity,
       selectedVariants,
