@@ -111,13 +111,15 @@ export const mockProducts: Product[] = [
       { name: '厚度', value: '中等厚度' }
     ],
     variants: [
-      { id: 'color-black', type: 'color', name: '颜色', value: '黑色', stock: 50 },
-      { id: 'color-white', type: 'color', name: '颜色', value: '白色', stock: 30 },
-      { id: 'color-gray', type: 'color', name: '颜色', value: '灰色', stock: 25 },
-      { id: 'size-s', type: 'size', name: '尺寸', value: 'S', stock: 20 },
-      { id: 'size-m', type: 'size', name: '尺寸', value: 'M', stock: 35 },
-      { id: 'size-l', type: 'size', name: '尺寸', value: 'L', stock: 40 },
-      { id: 'size-xl', type: 'size', name: '尺寸', value: 'XL', stock: 30 }
+      { id: 'color-black', type: 'color', name: '颜色', value: '黑色', stock: 50, priceModifier: 0 },
+      { id: 'color-white', type: 'color', name: '颜色', value: '白色', stock: 30, priceModifier: 0 },
+      { id: 'color-gray', type: 'color', name: '颜色', value: '灰色', stock: 25, priceModifier: 0 },
+      { id: 'color-red', type: 'color', name: '颜色', value: '红色', stock: 0, priceModifier: 0 }, // 缺货测试
+      { id: 'size-s', type: 'size', name: '尺寸', value: 'S', stock: 20, priceModifier: 0 },
+      { id: 'size-m', type: 'size', name: '尺寸', value: 'M', stock: 35, priceModifier: 0 },
+      { id: 'size-l', type: 'size', name: '尺寸', value: 'L', stock: 40, priceModifier: 0 },
+      { id: 'size-xl', type: 'size', name: '尺寸', value: 'XL', stock: 30, priceModifier: 2.00 }, // XL尺寸加价2元
+      { id: 'size-xxl', type: 'size', name: '尺寸', value: 'XXL', stock: 15, priceModifier: 5.00 } // XXL尺寸加价5元
     ],
     stock: 105,
     brand: '悠闲生活',
@@ -153,11 +155,17 @@ export const mockProducts: Product[] = [
       { name: '版型', value: '修身版型' }
     ],
     variants: [
-      { id: 'color-blue', type: 'color', name: '颜色', value: '蓝色', stock: 40 },
-      { id: 'color-black', type: 'color', name: '颜色', value: '黑色', stock: 25 },
-      { id: 'size-s', type: 'size', name: '尺寸', value: 'S', stock: 15 },
-      { id: 'size-m', type: 'size', name: '尺寸', value: 'M', stock: 30 },
-      { id: 'size-l', type: 'size', name: '尺寸', value: 'L', stock: 20 }
+      { id: 'color-blue', type: 'color', name: '颜色', value: '浅蓝色', stock: 40, priceModifier: 0 },
+      { id: 'color-darkblue', type: 'color', name: '颜色', value: '深蓝色', stock: 35, priceModifier: 3.00 }, // 深蓝色加价3元
+      { id: 'color-black', type: 'color', name: '颜色', value: '黑色', stock: 25, priceModifier: 0 },
+      { id: 'color-vintage', type: 'color', name: '颜色', value: '复古蓝', stock: 12, priceModifier: 8.00 }, // 复古蓝加价8元
+      { id: 'size-s', type: 'size', name: '尺寸', value: 'S', stock: 15, priceModifier: 0 },
+      { id: 'size-m', type: 'size', name: '尺寸', value: 'M', stock: 30, priceModifier: 0 },
+      { id: 'size-l', type: 'size', name: '尺寸', value: 'L', stock: 20, priceModifier: 0 },
+      { id: 'size-xl', type: 'size', name: '尺寸', value: 'XL', stock: 8, priceModifier: 2.00 }, // XL尺寸加价2元
+      { id: 'style-slim', type: 'style', name: '版型', value: '修身版', stock: 45, priceModifier: 0 },
+      { id: 'style-regular', type: 'style', name: '版型', value: '标准版', stock: 30, priceModifier: 0 },
+      { id: 'style-oversized', type: 'style', name: '版型', value: '宽松版', stock: 22, priceModifier: 4.00 } // 宽松版加价4元
     ],
     stock: 65,
     brand: '经典牛仔',
@@ -189,10 +197,14 @@ export const mockProducts: Product[] = [
       { name: '产地', value: '中国' }
     ],
     variants: [
-      { id: 'color-white', type: 'color', name: '颜色', value: '白色', stock: 35 },
-      { id: 'color-black', type: 'color', name: '颜色', value: '黑色', stock: 30 },
-      { id: 'size-s', type: 'size', name: '尺寸', value: 'S', stock: 25 },
-      { id: 'size-m', type: 'size', name: '尺寸', value: 'M', stock: 40 }
+      { id: 'color-white', type: 'color', name: '颜色', value: '白色', stock: 35, priceModifier: 0 },
+      { id: 'color-black', type: 'color', name: '颜色', value: '黑色', stock: 30, priceModifier: 0 },
+      { id: 'color-navy', type: 'color', name: '颜色', value: '海军蓝', stock: 18, priceModifier: 2.00 }, // 海军蓝加价2元
+      { id: 'color-gray', type: 'color', name: '颜色', value: '灰色', stock: 22, priceModifier: 0 },
+      { id: 'size-s', type: 'size', name: '尺寸', value: 'S', stock: 25, priceModifier: 0 },
+      { id: 'size-m', type: 'size', name: '尺寸', value: 'M', stock: 40, priceModifier: 0 },
+      { id: 'size-l', type: 'size', name: '尺寸', value: 'L', stock: 30, priceModifier: 0 },
+      { id: 'size-xl', type: 'size', name: '尺寸', value: 'XL', stock: 12, priceModifier: 1.50 } // XL尺寸加价1.5元
     ],
     stock: 65,
     brand: '运动时尚',

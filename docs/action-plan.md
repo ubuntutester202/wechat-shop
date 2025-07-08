@@ -95,7 +95,7 @@
   - [x] 单元测试 `ProductCard.test.tsx`
 - 下午：商品详情 & 购物车交互
   - [x] `useParams` 取 :id 调用 Mock
-  - [ ] 数量加减、规格选择
+  - [x] 数量加减、规格选择
   - [x] `addToCart(product)` 调用 zustand
   - [x] 购物车数量徽标联动
 

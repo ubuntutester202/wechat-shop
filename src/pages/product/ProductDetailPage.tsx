@@ -9,6 +9,7 @@ import {
 } from '../../assets/data/mock/products';
 import { useCartStore } from '../../stores/cartStore';
 import StatusBar from '../../components/common/StatusBar';
+import ProductSpecModal from '../../components/ui/ProductSpecModal';
 
 /**
  * 商品详情页面组件
@@ -30,11 +31,13 @@ const ProductDetailPage: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<ProductReview[]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: string }>({});
-  const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details');
   const [isLoading, setIsLoading] = useState(true);
+  
+  // 弹框状态
+  const [isSpecModalOpen, setIsSpecModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'cart' | 'buy'>('cart');
 
   // 获取商品数据
   useEffect(() => {
@@ -49,19 +52,6 @@ const ProductDetailPage: React.FC = () => {
         if (productData) {
           setProduct(productData);
           setReviews(reviewData);
-          
-          // 设置默认选中的变体
-          const defaultVariants: { [key: string]: string } = {};
-          if (productData.variants) {
-            const variantTypes = Array.from(new Set(productData.variants.map(v => v.type)));
-            variantTypes.forEach(type => {
-              const firstVariant = productData.variants?.find(v => v.type === type);
-              if (firstVariant) {
-                defaultVariants[type] = firstVariant.value;
-              }
-            });
-          }
-          setSelectedVariants(defaultVariants);
         }
         
         setIsLoading(false);
@@ -79,39 +69,29 @@ const ProductDetailPage: React.FC = () => {
     setSelectedImageIndex(index);
   };
 
-  // 处理变体选择
-  const handleVariantSelect = (type: string, value: string) => {
-    setSelectedVariants(prev => ({
-      ...prev,
-      [type]: value
-    }));
-  };
-
-  // 处理数量变化
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= (product?.stock || 0)) {
-      setQuantity(newQuantity);
-    }
-  };
-
   // 处理收藏
   const handleToggleFavorite = () => {
     setIsFavorite(!isFavorite);
     // TODO: 调用收藏API
   };
 
-  // 处理加入购物车
-  const handleAddToCart = () => {
+  // 处理加入购物车按钮点击
+  const handleAddToCartClick = () => {
     if (!product) return;
-    
-    // 检查是否已选择所有必需的变体
-    const requiredVariants = Array.from(new Set(product.variants?.map(v => v.type) || []));
-    const missingVariants = requiredVariants.filter(type => !selectedVariants[type]);
-    
-    if (missingVariants.length > 0) {
-      alert(`请选择${missingVariants.join('、')}`);
-      return;
-    }
+    setModalMode('cart');
+    setIsSpecModalOpen(true);
+  };
+
+  // 处理立即购买按钮点击
+  const handleBuyNowClick = () => {
+    if (!product) return;
+    setModalMode('buy');
+    setIsSpecModalOpen(true);
+  };
+
+  // 处理规格选择确认
+  const handleSpecConfirm = (selectedVariants: { [key: string]: string }, quantity: number) => {
+    if (!product) return;
 
     // 添加到购物车
     addItem({
@@ -123,15 +103,14 @@ const ProductDetailPage: React.FC = () => {
       selectedVariants,
       stock: product.stock || 0
     });
-    
-    alert('已添加到购物车');
-  };
 
-  // 处理立即购买
-  const handleBuyNow = () => {
-    handleAddToCart();
-    // TODO: 跳转到结算页面
-    // navigate('/checkout');
+    if (modalMode === 'cart') {
+      alert('已添加到购物车');
+    } else {
+      // 立即购买：跳转到结算页面
+      alert('跳转到结算页面'); // TODO: 实际实现
+      // navigate('/checkout');
+    }
   };
 
   // 渲染星级评分
@@ -147,32 +126,7 @@ const ProductDetailPage: React.FC = () => {
     return stars;
   };
 
-  // 渲染变体选择器
-  const renderVariantSelector = (type: string, variants: ProductVariant[]) => {
-    const typeVariants = variants.filter(v => v.type === type);
-    const displayName = type === 'color' ? '颜色' : type === 'size' ? '尺寸' : '选项';
-    
-    return (
-      <div key={type} className="mb-4">
-        <h3 className="text-sm font-medium text-gray-900 mb-2">{displayName}</h3>
-        <div className="flex flex-wrap gap-2">
-          {typeVariants.map(variant => (
-            <button
-              key={variant.id}
-              onClick={() => handleVariantSelect(type, variant.value)}
-              className={`px-4 py-2 rounded-md border text-sm font-medium transition-colors ${
-                selectedVariants[type] === variant.value
-                  ? 'border-blue-500 bg-blue-50 text-blue-600'
-                  : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-              }`}
-            >
-              {variant.value}
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  };
+
 
   // 渲染评价项
   const renderReviewItem = (review: ProductReview) => (
@@ -359,43 +313,7 @@ const ProductDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 规格选择 */}
-        {product.variants && product.variants.length > 0 && (
-          <div className="bg-white px-4 py-6 mb-2">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">选择规格</h2>
-            {Array.from(new Set(product.variants.map(v => v.type))).map(type => 
-              renderVariantSelector(type, product.variants!)
-            )}
-          </div>
-        )}
 
-        {/* 数量选择 */}
-        <div className="bg-white px-4 py-6 mb-2">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">数量</h2>
-          <div className="flex items-center gap-3">
-                         <button
-               onClick={() => handleQuantityChange(quantity - 1)}
-               disabled={quantity <= 1}
-               className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50"
-               title="减少数量"
-             >
-               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
-               </svg>
-             </button>
-             <span className="text-lg font-medium w-12 text-center">{quantity}</span>
-             <button
-               onClick={() => handleQuantityChange(quantity + 1)}
-               disabled={quantity >= (product.stock || 0)}
-               className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50"
-               title="增加数量"
-             >
-               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-               </svg>
-             </button>
-          </div>
-        </div>
 
         {/* 标签页 */}
         <div className="bg-white">
@@ -506,19 +424,30 @@ const ProductDetailPage: React.FC = () => {
          </button>
         
         <button
-          onClick={handleAddToCart}
+          onClick={handleAddToCartClick}
           className="flex-1 bg-yellow-500 text-white font-medium py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors"
         >
           加入购物车
         </button>
         
         <button
-          onClick={handleBuyNow}
+          onClick={handleBuyNowClick}
           className="flex-1 bg-red-500 text-white font-medium py-3 px-4 rounded-lg hover:bg-red-600 transition-colors"
         >
           立即购买
         </button>
       </div>
+
+      {/* 规格选择弹框 */}
+      {product && (
+        <ProductSpecModal
+          product={product}
+          isOpen={isSpecModalOpen}
+          onClose={() => setIsSpecModalOpen(false)}
+          onConfirm={handleSpecConfirm}
+          confirmText={modalMode === 'cart' ? '加入购物车' : '立即购买'}
+        />
+      )}
     </div>
   );
 };
