@@ -122,11 +122,11 @@
   - [x] Storybook 初始化（组件文档）
   - [x] 在 CI 中执行 `npm run lint`
 - 下午：前端阶段复盘 & 文档同步
-  - [ ] 更新 API Mock 描述至 `docs/api.md`
-  - [ ] 总结本周遇到的问题 + 解决
-  - [ ] 生成 `CHANGELOG.md` Week 1
-  - [ ] Roadmap 看板移动已完成卡片
-  - [ ] 预研 NestJS 创建步骤
+  - [x] 更新 API Mock 描述至 `docs/api-resources.md`
+  - [x] 总结本周遇到的问题 + 解决
+  - [x] 生成 `CHANGELOG.md` Week 1
+  - [x] Roadmap 看板移动已完成卡片
+  - [x] 预研 NestJS 创建步骤
 
 ---
 
