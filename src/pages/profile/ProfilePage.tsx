@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "../../components/common/BottomNavigation";
 import StatusBar from "../../components/common/StatusBar";
+import AvatarUploader from "../../components/ui/AvatarUploader";
+import { useUserStore } from "../../stores/userStore";
 
 /**
  * Profile页面组件 - 个人中心页面
@@ -9,6 +11,7 @@ import StatusBar from "../../components/common/StatusBar";
  */
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, user, updateAvatar, mockLogin, logout } = useUserStore();
 
   // 主要功能菜单项
   const mainFeatures = [
@@ -267,6 +270,26 @@ const ProfilePage: React.FC = () => {
       description: "数据和隐私保护",
     },
     {
+      id: "security",
+      icon: (
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+          ></path>
+        </svg>
+      ),
+      label: "安全设置",
+      description: "密码、二步验证",
+    },
+    {
       id: "help",
       icon: (
         <svg
@@ -294,12 +317,15 @@ const ProfilePage: React.FC = () => {
     switch (featureId) {
       case "favorites":
         // TODO: 导航到收藏页面
+        alert("收藏功能开发中...");
         break;
       case "history":
         // TODO: 导航到足迹页面
+        alert("浏览足迹功能开发中...");
         break;
       case "wallet":
         // TODO: 导航到钱包页面
+        alert("钱包功能开发中...");
         break;
       default:
         break;
@@ -335,7 +361,50 @@ const ProfilePage: React.FC = () => {
   // 处理设置项点击
   const handleSettingClick = (settingId: string) => {
     console.log("点击设置:", settingId);
-    // TODO: 导航到相应设置页面
+    switch (settingId) {
+      case "account":
+        alert("账户管理功能开发中...");
+        break;
+      case "address":
+        alert("地址管理功能开发中...");
+        break;
+      case "notifications":
+        alert("消息通知设置功能开发中...");
+        break;
+      case "privacy":
+        alert("隐私设置功能开发中...");
+        break;
+      case "security":
+        alert("安全设置功能开发中...");
+        break;
+      case "help":
+        alert("帮助中心功能开发中...");
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 处理头像更改
+  const handleAvatarChange = (avatarUrl: string) => {
+    updateAvatar(avatarUrl);
+  };
+
+  // 处理用户信息点击（查看个人资料或登录）
+  const handleUserInfoClick = () => {
+    if (!isLoggedIn) {
+      mockLogin();
+    } else {
+      // 已登录状态下点击查看个人资料
+      alert("个人资料编辑功能开发中...");
+    }
+  };
+
+  // 处理退出登录
+  const handleLogout = () => {
+    if (confirm("确定要退出登录吗？")) {
+      logout();
+    }
   };
 
   return (
@@ -347,26 +416,48 @@ const ProfilePage: React.FC = () => {
         {/* 用户信息卡片 */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-8 text-white">
           <div className="flex items-center space-x-4">
-            {/* 用户头像 */}
-            <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <svg
-                className="w-8 h-8 text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </div>
+            {/* 用户头像 - 使用头像上传组件 */}
+            <AvatarUploader
+              currentAvatar={user?.avatar}
+              onAvatarChange={handleAvatarChange}
+              size="lg"
+              disabled={!isLoggedIn}
+            />
 
             {/* 用户信息 */}
-            <div className="flex-1">
-              <h2 className="text-xl font-bold mb-1">用户昵称</h2>
-              <p className="text-blue-100 text-sm">点击查看和编辑个人资料</p>
+            <div
+              className="flex-1 cursor-pointer"
+              onClick={handleUserInfoClick}
+            >
+              <h2 className="text-xl font-bold mb-1">
+                {isLoggedIn ? user?.nickname || user?.name : "点击登录"}
+              </h2>
+              <p className="text-blue-100 text-sm">
+                {isLoggedIn ? "点击查看和编辑个人资料" : "登录后享受更多服务"}
+              </p>
+              {isLoggedIn && user?.email && (
+                <p className="text-blue-200 text-xs mt-1">{user.email}</p>
+              )}
             </div>
+
+            {/* 登录状态指示 */}
+            {!isLoggedIn && (
+              <div className="flex items-center justify-center w-8 h-8 bg-white bg-opacity-20 rounded-full">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            )}
           </div>
         </div>
 
@@ -449,11 +540,11 @@ const ProfilePage: React.FC = () => {
             >
               <div className="text-gray-400">{item.icon}</div>
               <div className="flex-1">
-                <h3 className="font-medium text-gray-900">{item.label}</h3>
-                <p className="text-sm text-gray-500">{item.description}</p>
+                <div className="font-medium text-gray-900">{item.label}</div>
+                <div className="text-sm text-gray-500">{item.description}</div>
               </div>
               <svg
-                className="w-5 h-5 text-gray-400"
+                className="w-4 h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -467,13 +558,34 @@ const ProfilePage: React.FC = () => {
               </svg>
             </div>
           ))}
-        </div>
 
-        {/* 退出登录按钮 */}
-        <div className="mx-4 mt-6">
-          <button className="w-full bg-white text-red-500 border border-red-200 rounded-lg py-3 px-4 font-medium hover:bg-red-50 transition-colors">
-            退出登录
-          </button>
+          {/* 退出登录按钮 - 仅在已登录时显示 */}
+          {isLoggedIn && (
+            <div
+              className="px-6 py-4 flex items-center space-x-4 cursor-pointer hover:bg-red-50 border-t border-gray-100"
+              onClick={handleLogout}
+            >
+              <div className="text-red-500">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <div className="font-medium text-red-600">退出登录</div>
+                <div className="text-sm text-red-400">安全退出当前账户</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
