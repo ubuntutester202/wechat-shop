@@ -109,6 +109,11 @@ const OrderDetailPage: React.FC = () => {
     // TODO: 实现具体的订单操作逻辑
   };
 
+  // 处理商品点击 - 跳转到商品详情页
+  const handleProductClick = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -232,14 +237,19 @@ const OrderDetailPage: React.FC = () => {
 
           <div className="space-y-4">
             {order.items.map((item, index) => (
-              <div key={index} className="flex items-start space-x-3">
+              <div
+                key={index}
+                className="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 rounded-lg p-3 -mx-3 transition-colors"
+                onClick={() => handleProductClick(item.productId)}
+                title="点击查看商品详情"
+              >
                 <img
                   src={item.image}
                   alt={item.name}
                   className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium text-gray-900 mb-1">
+                  <h4 className="text-sm font-medium text-gray-900 mb-1 hover:text-blue-600 transition-colors">
                     {item.name}
                   </h4>
 

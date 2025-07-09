@@ -50,7 +50,7 @@ const OrderListPage: React.FC = () => {
 
   // 处理返回
   const handleGoBack = () => {
-    navigate(-1);
+    navigate("/profile");
   };
 
   // 获取订单列表
