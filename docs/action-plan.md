@@ -120,7 +120,7 @@
   - [ ] 集成 SonarLint 插件
   - [ ] 设置 TypeScript 严格模式
   - [ ] 配置 absolute import 路径 `@/`
-  - [ ] Storybook 初始化（组件文档）
+  - [x] Storybook 初始化（组件文档）
   - [ ] 在 CI 中执行 `npm run lint`
 - 下午：前端阶段复盘 & 文档同步
   - [ ] 更新 API Mock 描述至 `docs/api.md`

@@ -17,3 +17,4 @@
 - [**结算功能实现教程**](./how-checkout-functionality-works.md): 介绍结算功能的关键技术和新特性，包括Zustand状态管理的进阶用法、React Hook Form表单处理、MSW Mock扩展，以及组件状态与UI交互的最佳实践。
 - [**GitHub Actions CI/CD 完全指南**](./how-github-actions-cicd-works.md): 深入解析GitHub Actions持续集成/持续部署的完整实现，覆盖工作流配置、缓存策略、测试自动化、质量保障体系以及故障排除，为项目提供自动化质量保障的最佳实践指南。
 - [**单元测试教程**](./how-unit-testing-works.md): 了解前端测试方案。
+- [**Storybook 组件开发与文档系统教程**](./how-storybook-works.md): 全面介绍 Storybook 这一现代前端组件开发利器，涵盖基础概念、配置详解、Story 编写、高级功能运用和最佳实践，助力团队构建高质量的组件库和设计系统。
