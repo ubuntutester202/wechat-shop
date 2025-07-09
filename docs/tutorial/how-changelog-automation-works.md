@@ -44,6 +44,41 @@
 | `payment` | 支付     | `ci`   | CI/CD    |
 | `profile` | 个人中心 | `deps` | 依赖管理 |
 
+## 🏁 项目初始化配置
+
+### 第一次设置 CHANGELOG 自动化
+
+如果你的项目还没有配置 CHANGELOG 自动化，按以下步骤操作：
+
+```bash
+# 1. 安装依赖
+pnpm add -D conventional-changelog-cli commitizen cz-conventional-changelog
+
+# 2. 在package.json中添加scripts
+{
+  "scripts": {
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog:first": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "commit": "cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
+}
+
+# 3. 创建初始版本标签（重要！）
+git tag v0.1.0  # 或者在特定commit上: git tag v0.1.0 <commit-hash>
+
+# 4. 生成初始CHANGELOG
+pnpm run changelog:first
+
+# 5. 提交CHANGELOG
+git add CHANGELOG.md
+git commit -m "docs: 初始化CHANGELOG"
+```
+
 ## 🚀 完整操作流程
 
 ### 1. 开发完成后的提交流程
@@ -140,6 +175,95 @@ git push origin main --tags
 - **ui**: 新增头像上传组件 ([ghi789](https://github.com/user/repo/commit/ghi789))
 ```
 
+## 🚨 故障排除指南
+
+### ❌ 问题 1: CHANGELOG 没有生成内容
+
+**症状**: 运行 `pnpm run changelog` 后，CHANGELOG.md 没有新增内容
+
+**原因**:
+
+- 缺少版本标签作为基准点
+- commit 消息不符合 conventional 格式
+- 标签位置不正确
+
+**解决方案**:
+
+```bash
+# 1. 检查是否有版本标签
+git tag --list
+
+# 2. 如果没有标签，创建基准标签
+git tag v0.1.0 <某个早期commit的hash>
+
+# 3. 检查commit消息格式
+git log --oneline -10
+# 确保commit格式为: type(scope): subject
+
+# 4. 如果标签位置错误，重新设置
+git tag -d v0.2.0  # 删除错误标签
+git tag v0.2.0 <正确的commit-hash>  # 重新创建
+
+# 5. 重新生成CHANGELOG
+pnpm run changelog
+```
+
+### ❌ 问题 2: npm version 报错 "Git working directory not clean"
+
+**症状**: 运行 `npm version minor` 时报错
+
+**原因**: 工作目录有未提交的更改
+
+**解决方案**:
+
+```bash
+# 方案1: 先提交所有更改（推荐）
+git add .
+git commit -m "feat: 完成新功能开发"
+npm version minor
+
+# 方案2: 强制执行（不推荐）
+npm version minor --force
+```
+
+### ❌ 问题 3: CHANGELOG 格式混乱或 commit 消息不规范
+
+**症状**: 生成的 CHANGELOG 包含不规范的 commit
+
+**解决方案**:
+
+```bash
+# 1. 修改最后一次commit消息
+git commit --amend -m "feat(auth): 新增用户登录功能"
+
+# 2. 重新生成干净的CHANGELOG
+rm CHANGELOG.md
+pnpm run changelog:first
+
+# 3. 使用commitizen避免格式错误
+pnpm run commit  # 而不是 git commit
+```
+
+### ❌ 问题 4: CHANGELOG 中缺少某些 commit
+
+**症状**: 某些符合格式的 commit 没有出现在 CHANGELOG 中
+
+**原因**: commit 在标签范围之外
+
+**解决方案**:
+
+```bash
+# 1. 查看标签和commit的关系
+git log --oneline --graph --decorate
+
+# 2. 调整标签位置
+git tag -d v0.2.0
+git tag v0.2.0 <包含所有新功能的commit>
+
+# 3. 重新生成
+pnpm run changelog
+```
+
 ## 💡 最佳实践
 
 ### ✅ 好的 Commit 示例
@@ -205,37 +329,30 @@ git commit -m "feat: 新增用户系统包括登录状态头像上传和各种�
 }
 ```
 
-## 🚨 常见问题解决
+## 🔍 检查清单
 
-### Q1: commit 消息写错了怎么办？
+### 发布前检查
 
-```bash
-# 修改最后一次commit消息
-git commit --amend -m "feat(auth): 新增用户登录功能"
+- [ ] 所有 commit 都符合 conventional 格式
+- [ ] 版本标签位置正确
+- [ ] CHANGELOG 内容准确完整
+- [ ] package.json 版本号正确
+- [ ] 工作目录干净（无未提交更改）
 
-# 如果已经push，需要强制推送（谨慎使用）
-git push --force-with-lease origin main
-```
-
-### Q2: 想要重新生成 CHANGELOG 怎么办？
+### 常用检查命令
 
 ```bash
-# 删除现有CHANGELOG
-rm CHANGELOG.md
+# 检查最近的commit格式
+git log --oneline -10
 
-# 重新生成完整CHANGELOG
-pnpm run changelog:first
-```
+# 检查版本标签
+git tag --list --sort=-version:refname
 
-### Q3: 版本号打错了怎么办？
+# 检查工作目录状态
+git status
 
-```bash
-# 回退版本号
-git reset --hard HEAD~1
-git tag -d v0.2.0  # 删除错误的tag
-
-# 重新设置正确版本
-npm version 0.1.1
+# 预览CHANGELOG生成结果（不写入文件）
+npx conventional-changelog -p angular
 ```
 
 ## 🎯 总结
@@ -244,5 +361,40 @@ npm version 0.1.1
 2. **发布前**：运行 `npm version` 更新版本号
 3. **发布时**：运行 `pnpm run changelog` 生成更新日志
 4. **推送时**：确保包含 tag: `git push origin main --tags`
+5. **遇到问题**：参考故障排除指南，检查标签和 commit 格式
 
 这样就能保持清晰的版本历史和自动化的 CHANGELOG 生成！
+
+## 📚 实际案例
+
+### 案例：本项目 v0.2.0 发布过程
+
+我们在实际使用中遇到了 CHANGELOG 不生成的问题，最终的解决步骤：
+
+```bash
+# 1. 发现问题：CHANGELOG没有生成v0.2.0内容
+pnpm run changelog  # 没有输出
+
+# 2. 诊断：缺少v0.1.0基准标签
+git tag --list  # 只有v0.2.0
+
+# 3. 解决：创建基准标签
+git tag v0.1.0 1baec5d  # 在项目初始框架commit上创建
+
+# 4. 手动补充：生成v0.2.0内容
+# 手动编辑CHANGELOG.md添加v0.2.0版本记录
+
+# 5. 提交：保存修复结果
+git add CHANGELOG.md
+git commit -m "docs: 更新CHANGELOG for v0.2.0"
+
+# 6. 推送：同步到远程
+git push origin main --tags
+```
+
+**学到的经验**:
+
+- 项目初期就要设置好版本标签
+- 遇到问题要检查标签结构
+- 必要时可以手动补充 CHANGELOG 内容
+- 保持 commit 消息规范是关键
