@@ -144,10 +144,10 @@
   - [x] 商品卡片点击跳转功能
 - 下午：用户中心原型
   - [x] `/profile` 基本信息页
-  - [ ] Mock 登录态 (localStorage token)
-  - [ ] 头像上传占位
-  - [ ] 地址管理入口
-  - [ ] 安全设置 placeholder
+  - [x] Mock 登录态 (localStorage token)
+  - [x] 头像上传占位
+  - [x] 地址管理入口
+  - [x] 安全设置 placeholder
 
 #### Day 8
 
