@@ -98,7 +98,7 @@ const generateMockOrders = (): Order[] => {
         status: orderStatus,
         items: [
           {
-            productId: `product_${index + 1}`,
+            productId: `${index + 1}`,
             name: `商品 ${index + 1}`,
             image: `https://picsum.photos/200/200?random=${index}`,
             quantity: Math.floor(Math.random() * 3) + 1,
