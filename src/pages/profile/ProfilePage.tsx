@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import StatusBar from "../../components/common/StatusBar";
 import BottomNavigation from "../../components/common/BottomNavigation";
+import StatusBar from "../../components/common/StatusBar";
 
 /**
  * Profile页面组件 - 个人中心页面
@@ -79,8 +79,18 @@ const ProfilePage: React.FC = () => {
     {
       id: "pending_payment",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+          ></path>
         </svg>
       ),
       label: "待付款",
@@ -89,8 +99,18 @@ const ProfilePage: React.FC = () => {
     {
       id: "pending_shipment",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+          ></path>
         </svg>
       ),
       label: "待发货",
@@ -99,8 +119,18 @@ const ProfilePage: React.FC = () => {
     {
       id: "pending_delivery",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M8 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
         </svg>
       ),
       label: "待收货",
@@ -109,8 +139,18 @@ const ProfilePage: React.FC = () => {
     {
       id: "pending_review",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+          ></path>
         </svg>
       ),
       label: "待评价",
@@ -119,8 +159,18 @@ const ProfilePage: React.FC = () => {
     {
       id: "refund_service",
       icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+          ></path>
         </svg>
       ),
       label: "退款/售后",
@@ -259,24 +309,21 @@ const ProfilePage: React.FC = () => {
   // 处理订单状态点击
   const handleOrderStatusClick = (statusId: string) => {
     console.log("点击订单状态:", statusId);
-    switch (statusId) {
-      case "pending_payment":
-        navigate("/orders?status=pending_payment");
-        break;
-      case "pending_shipment":
-        navigate("/orders?status=pending_shipment");
-        break;
-      case "pending_delivery":
-        navigate("/orders?status=pending_delivery");
-        break;
-      case "pending_review":
-        navigate("/orders?status=pending_review");
-        break;
-      case "refund_service":
-        navigate("/orders?status=refund_service");
-        break;
-      default:
-        break;
+    // 映射Profile页面的状态ID到订单列表页面的状态参数
+    const statusMapping: { [key: string]: string } = {
+      pending_payment: "pending", // 待付款 → pending
+      pending_shipment: "paid", // 待发货 → paid
+      pending_delivery: "shipped", // 待收货 → shipped
+      pending_review: "delivered", // 待评价 → delivered
+      refund_service: "cancelled", // 退款/售后 → cancelled
+    };
+
+    const mappedStatus = statusMapping[statusId];
+    if (mappedStatus) {
+      navigate(`/orders?status=${mappedStatus}`);
+    } else {
+      // 如果没有映射关系，默认跳转到全部订单
+      navigate("/orders");
     }
   };
 
@@ -333,12 +380,22 @@ const ProfilePage: React.FC = () => {
               className="flex items-center text-sm text-gray-500 hover:text-blue-600"
             >
               <span>全部</span>
-              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+              <svg
+                className="w-4 h-4 ml-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
               </svg>
             </button>
           </div>
-          
+
           {/* 订单状态列表 */}
           <div className="grid grid-cols-5 gap-2 p-6">
             {orderStatuses.map((status) => (
