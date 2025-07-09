@@ -178,7 +178,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onClick }) => {
 
       {/* 快速操作按钮（根据状态显示） */}
       <div className="flex justify-end space-x-2 mt-3">
-        {order.status === "pending" && (
+        {(order.status === "pending" || order.status === "paid") && (
           <button
             className="text-xs px-3 py-1 border border-gray-300 rounded text-gray-600 hover:bg-gray-50"
             onClick={(e) => {

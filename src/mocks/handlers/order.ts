@@ -75,6 +75,68 @@ interface Order {
   updatedAt: string;
 }
 
+// 🆕 提取生成mock订单数据的公共函数，确保订单列表和详情页数据一致
+const generateMockOrders = (): Order[] => {
+  const allStatuses: Order["status"][] = [
+    "pending",
+    "paid",
+    "shipped",
+    "delivered",
+    "cancelled",
+  ];
+  const mockOrders: Order[] = [];
+
+  // 为每种状态生成5个订单，确保有足够的数据进行筛选
+  allStatuses.forEach((orderStatus, statusIndex) => {
+    for (let i = 0; i < 5; i++) {
+      const index = statusIndex * 5 + i;
+      mockOrders.push({
+        id: `order_${index + 1}`,
+        orderNumber: `ORD${Date.now() - index * 86400000}${Math.floor(
+          Math.random() * 1000
+        )}`,
+        status: orderStatus,
+        items: [
+          {
+            productId: `product_${index + 1}`,
+            name: `商品 ${index + 1}`,
+            image: `https://picsum.photos/200/200?random=${index}`,
+            quantity: Math.floor(Math.random() * 3) + 1,
+            price: Math.floor(Math.random() * 500) + 50,
+            selectedVariants: { color: "黑色", size: "M" },
+          },
+        ],
+        address: {
+          name: "张三",
+          phone: "13800138000",
+          province: "广东省",
+          city: "深圳市",
+          district: "南山区",
+          detail: "科技园南区深南大道9988号",
+        },
+        payment: {
+          method: "wechat_pay",
+          amount: Math.floor(Math.random() * 500) + 50,
+          paidAt: ["paid", "shipped", "delivered"].includes(orderStatus)
+            ? new Date(Date.now() - index * 86400000).toISOString()
+            : undefined,
+        },
+        shipping: {
+          method: "标准配送",
+          fee: 10,
+          trackingNumber: ["shipped", "delivered"].includes(orderStatus)
+            ? `SF${Math.random().toString().substr(2, 12)}`
+            : undefined,
+        },
+        createdAt: new Date(Date.now() - index * 86400000).toISOString(),
+        updatedAt: new Date(Date.now() - index * 86400000).toISOString(),
+      });
+    }
+  });
+
+  return mockOrders;
+};
+
 export const orderHandlers = [
   // 计算订单金额
   http.post("/api/orders/calculate", async ({ request }) => {
@@ -168,63 +230,8 @@ export const orderHandlers = [
     const limit = parseInt(url.searchParams.get("limit") || "10");
     const status = url.searchParams.get("status"); // 获取状态筛选参数
 
-    // Mock 订单数据 - 为了保证筛选结果的可预测性，我们固定生成特定状态的订单
-    const allStatuses: Order["status"][] = [
-      "pending",
-      "paid",
-      "shipped",
-      "delivered",
-      "cancelled",
-    ];
-    const mockOrders: Order[] = [];
-
-    // 为每种状态生成5个订单，确保有足够的数据进行筛选
-    allStatuses.forEach((orderStatus, statusIndex) => {
-      for (let i = 0; i < 5; i++) {
-        const index = statusIndex * 5 + i;
-        mockOrders.push({
-          id: `order_${index + 1}`,
-          orderNumber: `ORD${Date.now() - index * 86400000}${Math.floor(
-            Math.random() * 1000
-          )}`,
-          status: orderStatus,
-          items: [
-            {
-              productId: `product_${index + 1}`,
-              name: `商品 ${index + 1}`,
-              image: `https://picsum.photos/200/200?random=${index}`,
-              quantity: Math.floor(Math.random() * 3) + 1,
-              price: Math.floor(Math.random() * 500) + 50,
-              selectedVariants: { color: "黑色", size: "M" },
-            },
-          ],
-          address: {
-            name: "张三",
-            phone: "13800138000",
-            province: "广东省",
-            city: "深圳市",
-            district: "南山区",
-            detail: "科技园南区深南大道9988号",
-          },
-          payment: {
-            method: "wechat_pay",
-            amount: Math.floor(Math.random() * 500) + 50,
-            paidAt: ["paid", "shipped", "delivered"].includes(orderStatus)
-              ? new Date(Date.now() - index * 86400000).toISOString()
-              : undefined,
-          },
-          shipping: {
-            method: "标准配送",
-            fee: 10,
-            trackingNumber: ["shipped", "delivered"].includes(orderStatus)
-              ? `SF${Math.random().toString().substr(2, 12)}`
-              : undefined,
-          },
-          createdAt: new Date(Date.now() - index * 86400000).toISOString(),
-          updatedAt: new Date(Date.now() - index * 86400000).toISOString(),
-        });
-      }
-    });
+    // 🔑 使用统一的数据生成函数
+    const mockOrders = generateMockOrders();
 
     // 根据状态筛选订单
     let filteredOrders = mockOrders;
@@ -257,43 +264,30 @@ export const orderHandlers = [
   http.get("/api/orders/:id", ({ params }) => {
     const { id } = params;
 
-    const mockOrder: Order = {
-      id: id as string,
-      orderNumber: `ORD${Date.now()}${Math.floor(Math.random() * 1000)}`,
-      status: "paid",
-      items: [
-        {
-          productId: "product_1",
-          name: "iPhone 15 Pro",
-          image: "https://picsum.photos/200/200?random=1",
-          quantity: 1,
-          price: 7999,
-          selectedVariants: { color: "深空黑色", storage: "256GB" },
-        },
-      ],
-      address: {
-        name: "张三",
-        phone: "13800138000",
-        province: "广东省",
-        city: "深圳市",
-        district: "南山区",
-        detail: "科技园南区深南大道9988号",
-      },
-      payment: {
-        method: "wechat_pay",
-        amount: 7999,
-        paidAt: new Date().toISOString(),
-      },
-      shipping: {
-        method: "标准配送",
-        fee: 0,
-        trackingNumber: `SF${Math.random().toString().substr(2, 12)}`,
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    // 🔑 使用统一的数据生成函数获取所有订单
+    const mockOrders = generateMockOrders();
 
-    return HttpResponse.json(mockOrder);
+    // 🔍 根据ID查找对应的订单
+    const order = mockOrders.find((order) => order.id === id);
+
+    if (!order) {
+      // 如果订单不存在，返回404错误
+      return new HttpResponse(
+        JSON.stringify({
+          error: "订单不存在",
+          message: `找不到ID为 ${id} 的订单`,
+        }),
+        {
+          status: 404,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // 🎯 返回找到的订单数据
+    return HttpResponse.json(order);
   }),
 
   // 取消订单
