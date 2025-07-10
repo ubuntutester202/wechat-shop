@@ -152,11 +152,11 @@
 #### Day 8
 
 - 上午：图片上传 & OSS 预研
-  - [ ] 调研腾讯云 COS / 阿里 OSS
-  - [ ] 用 Mock URL 占位上传返回
-  - [ ] 创建通用 `Uploader` 组件
-  - [ ] 撤销、进度条逻辑
-  - [ ] Unit test for Uploader
+  - [x] 腾讯云 COS
+  - [x] 用 Mock URL 占位上传返回
+  - [x] 创建通用 `Uploader` 组件
+  - [x] 撤销、进度条逻辑
+  - [x] Unit test for Uploader
 - 下午：样式规范化
   - [ ] 配置 Tailwind Theme (`tailwind.config.js`)
   - [ ] 提炼颜色/字号/圆角变量

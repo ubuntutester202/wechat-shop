@@ -16,8 +16,12 @@
 - [**React 进阶语法与特性深度学习：ProductSpecModal 组件案例解析**](./how-product-spec-modal-works.md): 通过一个真实的商品规格选择弹框组件，深入学习 React 的核心概念、TypeScript 集成、useState/useEffect Hooks、复杂状态管理、组件通信、条件渲染、函数式编程等现代前端开发的最佳实践。
 - [**结算功能实现教程**](./how-checkout-functionality-works.md): 介绍结算功能的关键技术和新特性，包括 Zustand 状态管理的进阶用法、React Hook Form 表单处理、MSW Mock 扩展，以及组件状态与 UI 交互的最佳实践。
 - [**GitHub Actions CI/CD 完全指南**](./how-github-actions-cicd-works.md): 深入解析 GitHub Actions 持续集成/持续部署的完整实现，覆盖工作流配置、缓存策略、测试自动化、质量保障体系以及故障排除，为项目提供自动化质量保障的最佳实践指南。
-- [**单元测试教程**](./how-unit-testing-works.md): 了解前端测试方案。
+
+* [**如何进行单元测试**](./how-unit-testing-works.md) - 介绍了项目如何使用 Vitest 和 React Testing Library 进行单元测试，包括基本概念、关键 API 和配置。
+
 - [**Storybook 组件开发与文档系统教程**](./how-storybook-works.md): 全面介绍 Storybook 这一现代前端组件开发利器，涵盖基础概念、配置详解、Story 编写、高级功能运用和最佳实践，助力团队构建高质量的组件库和设计系统。
 - [**CHANGELOG 自动化工作指南**](./how-changelog-automation-works.md): 本项目采用 **conventional-changelog** 方案自动生成 CHANGELOG
 - [**NestJS 创建步骤**](./how-nestjs-preparation-works.md): 这个预研不是要你成为 NestJS 专家，而是让你对 Week 3 的后端开发有足够的概念基础和信心。通过理解核心概念、熟悉开发流程、了解技术栈集成，你将能够更顺利地执行 Week 3 的具体开发任务！
 - [**订单管理系统架构解析：从用户点击到无限滚动的完整实现指南**](./how-order-management-works.md): 全面剖析电商应用的订单管理核心功能，从用户在 Profile 页面的第一次点击到订单详情页面的完整渲染过程。深入解析路由系统、组件架构、无限滚动实现、Mock 数据设计、状态管理与筛选逻辑、事件冒泡控制、智能导航等设计模式的最佳实践。
+
+* [**如何实现头像真实上传与解决 Vitest 配置冲突**](./how-real-avatar-upload-and-test-config-works.md) - 讲解了如何将头像上传从模拟实现升级为对接腾讯云 COS 的真实上传，并记录了解决 Vite 与 Storybook 测试配置冲突的详细过程。

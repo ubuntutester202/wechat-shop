@@ -5,14 +5,6 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import path from "node:path";
-const dirname =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
-
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [react()],
   css: {
@@ -31,16 +23,21 @@ export default defineConfig({
     outDir: "dist",
     sourcemap: true,
   },
-  // Vitest 配置
+  // Vitest 配置 - 专门用于传统单元测试
   test: {
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/test/setup.ts",
     css: true,
-    // 包含测试文件模式
+    // 只包含传统测试文件
     include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}"],
-    // 排除 playwright 测试
-    exclude: ["tests/**/*", "node_modules/**/*"],
+    // 排除 Storybook、Playwright 测试和其他文件
+    exclude: [
+      "tests/**/*",
+      "node_modules/**/*",
+      "src/**/*.stories.{js,ts,jsx,tsx}",
+      "**/*.mdx",
+    ],
     // 限制并发数以避免内存问题
     pool: "threads",
     poolOptions: {
@@ -60,33 +57,8 @@ export default defineConfig({
         "src/mocks/",
         "src/main.tsx",
         "vite.config.ts",
+        "**/*.stories.{js,ts,jsx,tsx}",
       ],
     },
-    projects: [
-      {
-        extends: true,
-        plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({
-            configDir: path.join(dirname, ".storybook"),
-          }),
-        ],
-        test: {
-          name: "storybook",
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: "playwright",
-            instances: [
-              {
-                browser: "chromium",
-              },
-            ],
-          },
-          setupFiles: [".storybook/vitest.setup.ts"],
-        },
-      },
-    ],
   },
 });

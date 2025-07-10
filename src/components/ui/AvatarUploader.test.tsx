@@ -3,30 +3,27 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import AvatarUploader from "./AvatarUploader";
 
-// Mock COS Uploader
+// Mock COS Uploader - 在文件顶部定义
+const mockUploadFile = vi.fn();
+const mockCancelUpload = vi.fn();
+const mockClearAllTasks = vi.fn();
+
 vi.mock("../../utils/cosUploader", () => ({
   createCOSUploader: vi.fn(() => ({
-    uploadFile: vi.fn(),
-    cancelUpload: vi.fn(),
-    clearAllTasks: vi.fn(),
+    uploadFile: mockUploadFile,
+    cancelUpload: mockCancelUpload,
+    clearAllTasks: mockClearAllTasks,
   })),
 }));
 
-// Mock URL.createObjectURL
-global.URL.createObjectURL = vi.fn(() => "mocked-url");
-global.URL.revokeObjectURL = vi.fn();
-
 describe("AvatarUploader", () => {
   const mockOnAvatarChange = vi.fn();
-  let mockUploader: any;
 
   beforeEach(() => {
     mockOnAvatarChange.mockClear();
-    const { createCOSUploader } = require("../../utils/cosUploader");
-    mockUploader = createCOSUploader();
-    mockUploader.uploadFile.mockClear();
-    mockUploader.cancelUpload.mockClear();
-    mockUploader.clearAllTasks.mockClear();
+    mockUploadFile.mockClear();
+    mockCancelUpload.mockClear();
+    mockClearAllTasks.mockClear();
   });
 
   afterEach(() => {
@@ -81,6 +78,7 @@ describe("AvatarUploader", () => {
     await user.click(container);
 
     expect(clickSpy).toHaveBeenCalled();
+    clickSpy.mockRestore();
   });
 
   it("should not open file dialog when disabled", async () => {
@@ -94,10 +92,11 @@ describe("AvatarUploader", () => {
     await user.click(container);
 
     expect(clickSpy).not.toHaveBeenCalled();
+    clickSpy.mockRestore();
   });
 
   it("should handle file selection and upload", async () => {
-    mockUploader.uploadFile.mockResolvedValue({
+    mockUploadFile.mockResolvedValue({
       url: "https://cos.example.com/avatar.jpg",
       key: "avatar/123_test.jpg",
       etag: "mock-etag",
@@ -111,7 +110,7 @@ describe("AvatarUploader", () => {
 
     await userEvent.upload(input, file);
 
-    expect(mockUploader.uploadFile).toHaveBeenCalledWith(
+    expect(mockUploadFile).toHaveBeenCalledWith(
       expect.objectContaining({
         file,
         key: expect.stringContaining("avatar/"),
@@ -139,7 +138,7 @@ describe("AvatarUploader", () => {
     await userEvent.upload(input, file);
 
     expect(alertSpy).toHaveBeenCalledWith("请选择图片文件");
-    expect(mockUploader.uploadFile).not.toHaveBeenCalled();
+    expect(mockUploadFile).not.toHaveBeenCalled();
 
     alertSpy.mockRestore();
   });
@@ -158,7 +157,7 @@ describe("AvatarUploader", () => {
     await userEvent.upload(input, largeFile);
 
     expect(alertSpy).toHaveBeenCalledWith("图片大小不能超过5MB");
-    expect(mockUploader.uploadFile).not.toHaveBeenCalled();
+    expect(mockUploadFile).not.toHaveBeenCalled();
 
     alertSpy.mockRestore();
   });
@@ -166,7 +165,7 @@ describe("AvatarUploader", () => {
   it("should show upload progress", async () => {
     let progressCallback: (progress: any) => void;
 
-    mockUploader.uploadFile.mockImplementation(({ onProgress }: any) => {
+    mockUploadFile.mockImplementation(({ onProgress }: any) => {
       progressCallback = onProgress;
       return new Promise(() => {}); // Never resolve to keep upload in progress
     });
@@ -189,7 +188,7 @@ describe("AvatarUploader", () => {
   it("should handle upload cancellation", async () => {
     let progressCallback: (progress: any) => void;
 
-    mockUploader.uploadFile.mockImplementation(({ onProgress }: any) => {
+    mockUploadFile.mockImplementation(({ onProgress }: any) => {
       progressCallback = onProgress;
       return new Promise(() => {}); // Never resolve to keep upload in progress
     });
@@ -212,7 +211,7 @@ describe("AvatarUploader", () => {
     const cancelButton = screen.getByText("取消");
     await userEvent.click(cancelButton);
 
-    expect(mockUploader.cancelUpload).toHaveBeenCalled();
+    expect(mockCancelUpload).toHaveBeenCalled();
   });
 
   it("should handle upload error", async () => {
@@ -221,7 +220,7 @@ describe("AvatarUploader", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    mockUploader.uploadFile.mockRejectedValue(new Error("Upload failed"));
+    mockUploadFile.mockRejectedValue(new Error("Upload failed"));
 
     render(<AvatarUploader onAvatarChange={mockOnAvatarChange} />);
 
@@ -242,7 +241,7 @@ describe("AvatarUploader", () => {
   });
 
   it("should handle drag and drop", async () => {
-    mockUploader.uploadFile.mockResolvedValue({
+    mockUploadFile.mockResolvedValue({
       url: "https://cos.example.com/avatar.jpg",
       key: "avatar/123_test.jpg",
       etag: "mock-etag",
@@ -270,7 +269,7 @@ describe("AvatarUploader", () => {
       },
     });
 
-    expect(mockUploader.uploadFile).toHaveBeenCalled();
+    expect(mockUploadFile).toHaveBeenCalled();
   });
 
   it("should clear tasks on unmount", () => {
@@ -280,7 +279,7 @@ describe("AvatarUploader", () => {
 
     unmount();
 
-    expect(mockUploader.clearAllTasks).toHaveBeenCalled();
+    expect(mockClearAllTasks).toHaveBeenCalled();
   });
 
   it("should show development debug info", async () => {
@@ -290,7 +289,7 @@ describe("AvatarUploader", () => {
 
     let progressCallback: (progress: any) => void;
 
-    mockUploader.uploadFile.mockImplementation(({ onProgress }: any) => {
+    mockUploadFile.mockImplementation(({ onProgress }: any) => {
       progressCallback = onProgress;
       return new Promise(() => {}); // Never resolve to keep upload in progress
     });
@@ -314,6 +313,3 @@ describe("AvatarUploader", () => {
     process.env.NODE_ENV = originalEnv;
   });
 });
-
-// Install @testing-library/user-event if not already installed
-// pnpm add -D @testing-library/user-event
