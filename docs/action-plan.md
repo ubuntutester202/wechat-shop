@@ -222,11 +222,11 @@
   - [x] Dockerfile & docker-compose 基础
   - [x] 首次 commit
 - 下午：数据库模型 & Prisma
-  - [ ] `pnpm add -D prisma`；`npx prisma init`
-  - [ ] 建表：User, Product, CartItem, Order, Address
-  - [ ] `prisma migrate dev --name init`
-  - [ ] 种子脚本 `prisma/seed.ts`
-  - [ ] ER 图导出
+  - [x] `pnpm add -D prisma`；`npx prisma init`
+  - [x] 建表：User, Product, CartItem, Order, Address
+  - [x] `prisma migrate dev --name init`
+  - [x] 种子脚本 `prisma/seed.ts`
+  - [x] ER 图导出
 
 #### Day 13
 

@@ -252,6 +252,172 @@ pnpm prisma:seed
 
 这里的关键是，`seed` 命令中包含了 `prisma generate`，它会确保 `PrismaClient` 客户端在运行前被正确生成，从而避免了类型导入错误。
 
-## 总结
+## 4. 在 NestJS 中使用 Prisma (核心)
 
-通过以上步骤，我们为后端项目成功搭建了一个健壮、类型安全且易于维护的数据库环境。整个过程虽然充满挑战，但也让我们对 Docker 构建、Prisma 工作流以及环境兼容性问题有了更深刻的理解。这些经验将成为我们项目宝贵的知识财富。
+前面的步骤完成了数据库的“搭建”，但更关键的是如何在我们的 NestJS 应用代码中“使用”它。下面我们将演示在 NestJS 中集成并使用 Prisma 的最佳实践。
+
+### 步骤一：创建可注入的 `PrismaService`
+
+为了能在整个应用中方便地使用 Prisma Client，并遵循 NestJS 的依赖注入原则，我们不应该在每个服务中都去 `new PrismaClient()`。最佳实践是创建一个专门的 `PrismaService`。
+
+我们创建 `backend/src/prisma.service.ts` 文件：
+
+```typescript
+// file: backend/src/prisma.service.ts
+import { Injectable, OnModuleInit } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit {
+  async onModuleInit() {
+    await this.$connect();
+  }
+}
+```
+
+这个服务继承了 `PrismaClient`，并利用 NestJS 的生命周期钩子 `onModuleInit` 来确保在应用启动时自动连接数据库。
+
+### 步骤二：在主模块中注册 `PrismaService`
+
+服务创建好后，需要将其注册到模块中才能被注入。我们将其注册在根模块 `AppModule` 中，使其成为一个全局可用的服务。
+
+```typescript
+// file: backend/src/app.module.ts
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { PrismaService } from "./prisma.service"; // 1. 导入
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath:
+        process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
+    }),
+  ],
+  controllers: [AppController],
+  providers: [AppService, PrismaService], // 2. 注册为 Provider
+})
+export class AppModule {}
+```
+
+### 步骤三：在业务逻辑中使用 `PrismaService`
+
+现在，我们可以在任何需要操作数据库的业务服务（Service）中，通过构造函数注入 `PrismaService`。下面我们将改造默认的 `AppService`，让它实现查询所有用户的功能。
+
+```typescript
+// file: backend/src/app.service.ts
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "./prisma.service"; // 1. 导入服务
+import { User } from "@prisma/client"; // 2. 导入 Prisma 生成的类型
+
+@Injectable()
+export class AppService {
+  // 3. 通过构造函数注入
+  constructor(private readonly prisma: PrismaService) {}
+
+  // 4. 编写业务方法
+  async getUsers(): Promise<User[]> {
+    return this.prisma.user.findMany();
+  }
+}
+```
+
+`@prisma/client` 生成的 `User` 类型为我们的代码提供了端到端的类型安全。
+
+### 步骤四：在控制器中暴露 API
+
+最后，我们修改 `AppController`，添加一个 `/users` 的 API 端点，调用 `AppService` 中的方法，并将结果返回给客户端。
+
+```typescript
+// file: backend/src/app.controller.ts
+import { Controller, Get } from "@nestjs/common";
+import { AppService } from "./app.service";
+import { User } from "@prisma/client";
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get("users")
+  async getUsers(): Promise<User[]> {
+    return this.appService.getUsers();
+  }
+}
+```
+
+至此，我们完成了一个完整的从 API 请求到数据库查询的链路。
+
+## 5. 如何测试 API (数据流转解析)
+
+我们已经成功创建了 `/users` API，但由于后端服务运行在 Docker 容器中，我们该如何从本地的 Windows 系统访问并测试它呢？答案是利用 Docker 的 **端口映射 (Port Mapping)**。
+
+### 端口映射原理
+
+在项目根目录的 `docker-compose.yml` 文件中，我们为 `backend` 服务配置了端口映射：
+
+```yaml
+# file: docker-compose.yml
+services:
+  # ...
+  backend:
+    # ...
+    ports:
+      - "3001:3001" # 将主机的 3001 端口映射到容器的 3001 端口
+    # ...
+```
+
+这意味着，任何发送到你 Windows 主机 `localhost:3001` 的请求，都会被 Docker 自动转发到 `backend` 容器内部的 3001 端口，而我们的 NestJS 应用正在那里监听请求。
+
+### 测试方法
+
+基于此原理，你可以通过以下任一方式进行测试：
+
+1.  **使用浏览器**：直接在浏览器地址栏输入 `http://localhost:3001/users` 并访问。
+2.  **使用 cURL**：在终端中执行命令 `curl http://localhost:3001/users`。
+
+如果一切正常，你应该能看到一个包含用户数据的 JSON 数组或一个空数组 `[]`。
+
+### 数据流全景图
+
+为了让你更直观地理解整个请求的生命周期，下面这张图清晰地展示了从你在 Windows 上发起请求，到 Docker 容器内部处理，再到数据库交互，最后返回响应的全过程。
+
+```mermaid
+graph TD
+    subgraph "你的 Windows 电脑"
+        Client["浏览器 或 cURL 终端"]
+    end
+
+    subgraph "Docker 环境"
+        DockerNetwork["Docker 网络 (localhost)"]
+
+        subgraph "Backend 容器"
+            NestApp["NestJS 应用<br>监听 3001 端口"]
+            Controller["AppController<br>@Get('/users')"]
+            Service["AppService<br>getUsers()"]
+            PrismaService["PrismaService"]
+        end
+
+        subgraph "Postgres 容器"
+            Database["PostgreSQL 数据库"]
+        end
+    end
+
+    Client -- "1 HTTP GET 请求<br>http://localhost:3001/users" --> DockerNetwork
+    DockerNetwork -- "2 端口映射<br>Host(3001) -> Container(3001)" --> NestApp
+    NestApp --> Controller
+    Controller -- "3 调用 appService.getUsers()" --> Service
+    Service -- "4 调用 prisma.user.findMany()" --> PrismaService
+    PrismaService -- "5 生成 SQL 查询<br>SELECT * FROM User" --> Database
+    Database -- "6 返回查询结果" --> PrismaService
+    PrismaService -- "7 返回用户数据" --> Service
+    Service -- "8 返回用户数据" --> Controller
+    Controller -- "9 封装成 HTTP 响应" --> NestApp
+    NestApp --> DockerNetwork
+    DockerNetwork -- "10 返回 JSON 响应给客户端" --> Client
+```
+
+## 6. 总结
+
+通过以上步骤，我们为后端项目成功搭建了一个健壮、类型安全且易于维护的数据库环境，并演示了如何在 NestJS 应用中以最佳实践的方式使用它。整个过程虽然充满挑战，但也让我们对 Docker 构建、Prisma 工作流以及 NestJS 依赖注入有了更深刻的理解。这些经验将成为我们项目宝贵的知识财富。
