@@ -197,11 +197,11 @@
 #### Day 11
 
 - 上午：Storybook 组件文档完善
-  - [ ] 写 `ProductCard.stories.tsx`, `Button.stories.tsx`
-  - [ ] 配置 Addon-controls
-  - [ ] 自动快照测试
-  - [ ] Deploy Storybook 到 GitHub Pages
-  - [ ] PR Review checklist
+  - [x] 写 `ProductCard.stories.tsx`, `Button.stories.tsx`
+  - [x] 配置 Addon-controls
+  - [x] 自动快照测试
+  - [x] Deploy Storybook 到 GitHub Pages
+  - [x] PR Review checklist(项目中已经包含了 Pull Request 模板)
 - 下午：前端收尾 & 移交
   - [ ] 清理 TODO / console.log
   - [ ] `npm run build` 产物 sizecheck
