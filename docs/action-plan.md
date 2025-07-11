@@ -216,11 +216,11 @@
 #### Day 12
 
 - 上午：NestJS 项目初始化
-  - [ ] `pnpm add -g @nestjs/cli`；`nest new backend`
-  - [ ] 配置 ESLint, Prettier, Jest
-  - [ ] 环境区分 `.env.dev/.env.prod`
-  - [ ] Dockerfile & docker-compose 基础
-  - [ ] 首次 commit
+  - [x] `pnpm add -g @nestjs/cli`；`nest new backend`
+  - [x] 配置 ESLint, Prettier, Jest
+  - [x] 环境区分 `.env.dev/.env.prod`
+  - [x] Dockerfile & docker-compose 基础
+  - [x] 首次 commit
 - 下午：数据库模型 & Prisma
   - [ ] `pnpm add -D prisma`；`npx prisma init`
   - [ ] 建表：User, Product, CartItem, Order, Address

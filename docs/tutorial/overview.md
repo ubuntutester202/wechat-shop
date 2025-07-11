@@ -22,6 +22,7 @@
 - [**Storybook 组件开发与文档系统教程**](./how-storybook-works.md): 全面介绍 Storybook 这一现代前端组件开发利器，涵盖基础概念、配置详解、Story 编写、高级功能运用和最佳实践，助力团队构建高质量的组件库和设计系统。
 - [**CHANGELOG 自动化工作指南**](./how-changelog-automation-works.md): 本项目采用 **conventional-changelog** 方案自动生成 CHANGELOG
 - [**NestJS 创建步骤**](./how-nestjs-preparation-works.md): 这个预研不是要你成为 NestJS 专家，而是让你对 Week 3 的后端开发有足够的概念基础和信心。通过理解核心概念、熟悉开发流程、了解技术栈集成，你将能够更顺利地执行 Week 3 的具体开发任务！
+
 - [**订单管理系统架构解析：从用户点击到无限滚动的完整实现指南**](./how-order-management-works.md): 全面剖析电商应用的订单管理核心功能，从用户在 Profile 页面的第一次点击到订单详情页面的完整渲染过程。深入解析路由系统、组件架构、无限滚动实现、Mock 数据设计、状态管理与筛选逻辑、事件冒泡控制、智能导航等设计模式的最佳实践。
 
 * [**如何实现头像真实上传与解决 Vitest 配置冲突**](./how-real-avatar-upload-and-test-config-works.md) - 讲解了如何将头像上传从模拟实现升级为对接腾讯云 COS 的真实上传，并记录了解决 Vite 与 Storybook 测试配置冲突的详细过程。
@@ -29,3 +30,4 @@
 - [**如何正确生成并查看 Lighthouse 性能报告**](./how-to-run-and-view-lighthouse-report.md): 详细分步教程，指导如何为项目生成 Lighthouse 性能报告，并讲解了如何通过本地服务器和在线查看器正确浏览报告，避免常见的“白屏”问题。
 
 - [**如何使用 OpenAPI 驱动 API 开发**](./how-openapi-workflow-works.md): 详解本项目“契约先行”的 API 开发工作流，指导开发者如何通过修改 `openapi.yaml` 契约文件并运行脚本来自动同步 API 的 TypeScript 类型。
+- [**NestJS 后端项目准备教程**](./how-to-prepare-a-NestJs-backend-project.md.md): 详细分步教程，指导如何从零开始初始化一个 NestJS 项目，并完成环境配置、Docker 容器化以及 Docker Compose 编排，为后续的业务开发打下坚实基础。
