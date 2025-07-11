@@ -203,11 +203,11 @@
   - [x] Deploy Storybook 到 GitHub Pages
   - [x] PR Review checklist(项目中已经包含了 Pull Request 模板)
 - 下午：前端收尾 & 移交
-  - [ ] 清理 TODO / console.log
-  - [ ] `npm run build` 产物 sizecheck
-  - [ ] Issue 列出后台需求清单
-  - [ ] Week 2 回顾会议记录
-  - [ ] 更新里程碑、推进 Week 3
+  - [x] 清理 TODO / console.log
+  - [x] `npm run build` 产物 sizecheck
+  - [x] Issue 列出后台需求清单
+  - [x] Week 2 回顾会议记录
+  - [x] 更新里程碑、推进 Week 3; 这个说的是 github Project 吧
 
 ---
 

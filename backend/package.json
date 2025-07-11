@@ -1,0 +1,31 @@
+{
+  "name": "@plan3/backend",
+  "private": true,
+  "version": "0.3.0",
+  "type": "module",
+  "description": "Backend API for Plan3 Online Sales WeChat Mini Program",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "echo \"Backend development setup coming soon...\"",
+    "build": "echo \"Backend build setup coming soon...\"",
+    "start": "echo \"Backend start setup coming soon...\"",
+    "test": "echo \"Backend test setup coming soon...\"",
+    "lint": "echo \"Backend lint setup coming soon...\"",
+    "clean": "rm -rf dist node_modules"
+  },
+  "keywords": [
+    "nodejs",
+    "api",
+    "wechat",
+    "ecommerce"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 
