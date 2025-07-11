@@ -1,0 +1,290 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+
+enum UserRole {
+  BUYER
+  MERCHANT
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  SOLD_OUT
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum CouponType {
+  FIXED
+  PERCENTAGE
+}
+
+enum CouponStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum UserCouponStatus {
+  UNUSED
+  USED
+  EXPIRED
+}
+
+// Models
+
+model User {
+  id        String     @id @default(cuid())
+  openId    String?    @unique
+  unionId   String?    @unique
+  nickname  String?
+  avatar    String?
+  phone     String?    @unique
+  email     String?    @unique
+  password  String?
+  role      UserRole   @default(BUYER)
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  addresses     Address[]
+  cartItems     CartItem[]
+  ordersAsBuyer Order[]        @relation("BuyerOrders")
+  ordersAsMerchant Order[]     @relation("MerchantOrders")
+  userCoupons   UserCoupon[]
+  favorites     Favorite[]
+  browseRecords BrowseRecord[]
+  
+  // A user can also be a merchant and publish products/coupons
+  publishedProducts Product[] @relation("MerchantProducts")
+  publishedCoupons Coupon[] @relation("MerchantCoupons")
+}
+
+model Address {
+  id            String   @id @default(cuid())
+  receiverName  String
+  receiverPhone String
+  province      String
+  city          String
+  district      String
+  detail        String
+  postalCode    String?
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  name          String
+  description   String?
+  price         Int // in cents
+  originalPrice Int? // in cents
+  stock         Int           @default(0)
+  images        Json?
+  category      String?
+  tags          Json?
+  status        ProductStatus @default(DRAFT)
+  salesCount    Int           @default(0)
+  rating        Float?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  merchant   User   @relation("MerchantProducts", fields: [merchantId], references: [id])
+  merchantId String
+
+  specs         ProductSpec[]
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+  favorites     Favorite[]
+  browseRecords BrowseRecord[]
+}
+
+model ProductSpec {
+  id              String   @id @default(cuid())
+  name            String
+  value           String
+  priceAdjustment Int      @default(0) // in cents
+  stock           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  spec   ProductSpec? @relation(fields: [specId], references: [id])
+  specId String?
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNo         String      @unique
+  status          OrderStatus @default(PENDING)
+  totalAmount     Int // in cents
+  discountAmount  Int         @default(0) // in cents
+  shippingAmount  Int         @default(0) // in cents
+  paymentAmount   Int // in cents
+  paymentMethod   String?
+  shippingAddress Json
+  remark          String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  buyer   User   @relation("BuyerOrders", fields: [userId], references: [id])
+  userId  String
+
+  merchant   User   @relation("MerchantOrders", fields: [merchantId], references: [id])
+  merchantId String
+
+  items       OrderItem[]
+  payments    Payment[]
+  usedCoupons UserCoupon[]
+}
+
+model OrderItem {
+  id              String   @id @default(cuid())
+  quantity        Int
+  unitPrice       Int // in cents
+  totalPrice      Int // in cents
+  productSnapshot Json
+  specSnapshot    Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId String
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  spec   ProductSpec? @relation(fields: [specId], references: [id])
+  specId String?
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  paymentNo       String        @unique
+  provider        String?
+  providerOrderId String?
+  amount          Int // in cents
+  status          PaymentStatus @default(PENDING)
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
+}
+
+model Coupon {
+  id            String       @id @default(cuid())
+  name          String
+  type          CouponType
+  value         Int // for FIXED, it's cents; for PERCENTAGE, it's 1-100
+  minAmount     Int?         @default(0) // in cents
+  maxDiscount   Int? // in cents
+  totalQuantity Int
+  usedQuantity  Int          @default(0)
+  startDate     DateTime
+  endDate       DateTime
+  status        CouponStatus @default(ACTIVE)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  merchant   User   @relation("MerchantCoupons", fields: [merchantId], references: [id])
+  merchantId String
+
+  userCoupons UserCoupon[]
+}
+
+model UserCoupon {
+  id         String           @id @default(cuid())
+  status     UserCouponStatus @default(UNUSED)
+  usedAt     DateTime?
+  obtainedAt DateTime         @default(now())
+  expiredAt  DateTime?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  coupon   Coupon @relation(fields: [couponId], references: [id])
+  couponId String
+
+  order   Order? @relation(fields: [orderId], references: [id])
+  orderId String?
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  @@unique([userId, productId])
+}
+
+model BrowseRecord {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+}

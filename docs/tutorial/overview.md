@@ -31,3 +31,4 @@
 
 - [**如何使用 OpenAPI 驱动 API 开发**](./how-openapi-workflow-works.md): 详解本项目“契约先行”的 API 开发工作流，指导开发者如何通过修改 `openapi.yaml` 契约文件并运行脚本来自动同步 API 的 TypeScript 类型。
 - [**NestJS 后端项目准备教程**](./how-to-prepare-a-NestJs-backend-project.md.md): 详细分步教程，指导如何从零开始初始化一个 NestJS 项目，并完成环境配置、Docker 容器化以及 Docker Compose 编排，为后续的业务开发打下坚实基础。
+- [**如何使用 Prisma 为 NestJS 项目搭建数据库**](./how-database-with-prisma-works.md): 详细介绍了为后端引入并配置 Prisma ORM 和 PostgreSQL 数据库的完整流程，并记录了在 Docker 环境中遇到的关键问题（如 `node:20-slim` 镜像的选择）及其解决方案。
