@@ -158,26 +158,26 @@
   - [x] 撤销、进度条逻辑
   - [x] Unit test for Uploader
 - 下午：样式规范化
-  - [ ] 配置 Tailwind Theme (`tailwind.config.js`)
-  - [ ] 提炼颜色/字号/圆角变量
-  - [ ] 提供 `@apply` mixin 框架
-  - [ ] Dark Mode 切换 demo
-  - [ ] Figma Token 对应更新
+  - [-] 配置 Tailwind Theme (`tailwind.config.js`)
+  - [-] 提炼颜色/字号/圆角变量
+  - [-] 提供 `@apply` mixin 框架
+  - [-] Dark Mode 切换 demo
+  - [-] Figma Token 对应更新
 
 #### Day 9
 
 - 上午：国际化 & 数字格式
-  - [ ] `pnpm add react-i18next`
-  - [ ] 中/英语言包抽离
-  - [ ] 价格格式化 `Intl.NumberFormat`
-  - [ ] 日期 `dayjs` 本地化
-  - [ ] 切换按钮完成
+  - [-] `pnpm add react-i18next`
+  - [-] 中/英语言包抽离
+  - [-] 价格格式化 `Intl.NumberFormat`
+  - [-] 日期 `dayjs` 本地化
+  - [-] 切换按钮完成
 - 下午：性能优化 & 懒加载
-  - [ ] 路由分包 `chunkName` 注释
-  - [ ] 图片懒加载 `<img loading="lazy">` 或 `react-lazy-load-image`
-  - [ ] Lighthouse 测试
-  - [ ] Tailwind purge 配置
-  - [ ] 记录性能基线
+  - [x] 路由分包 `chunkName` 注释
+  - [x] 图片懒加载 `<img loading="lazy">` 或 `react-lazy-load-image`
+  - [x] Lighthouse 测试
+  - [x] Tailwind purge 配置
+  - [x] 记录性能基线
 
 #### Day 10
 
@@ -187,7 +187,7 @@
   - [ ] 离线缓存首页 & 静态资源
   - [ ] 添加安装提示
   - [ ] 测试 Chrome DevTools 加装
-- 下午：前端与后端契约文档
+- 下午：前后端契约文档
   - [ ] 使用 OpenAPI 3.1 草稿
   - [ ] 定义 `GET /products` 等接口 schema
   - [ ] 生成 `openapi.yaml` 放 `/api` 目录

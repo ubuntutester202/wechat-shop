@@ -25,3 +25,5 @@
 - [**订单管理系统架构解析：从用户点击到无限滚动的完整实现指南**](./how-order-management-works.md): 全面剖析电商应用的订单管理核心功能，从用户在 Profile 页面的第一次点击到订单详情页面的完整渲染过程。深入解析路由系统、组件架构、无限滚动实现、Mock 数据设计、状态管理与筛选逻辑、事件冒泡控制、智能导航等设计模式的最佳实践。
 
 * [**如何实现头像真实上传与解决 Vitest 配置冲突**](./how-real-avatar-upload-and-test-config-works.md) - 讲解了如何将头像上传从模拟实现升级为对接腾讯云 COS 的真实上传，并记录了解决 Vite 与 Storybook 测试配置冲突的详细过程。
+
+- [**如何正确生成并查看 Lighthouse 性能报告**](./how-to-run-and-view-lighthouse-report.md): 详细分步教程，指导如何为项目生成 Lighthouse 性能报告，并讲解了如何通过本地服务器和在线查看器正确浏览报告，避免常见的“白屏”问题。
