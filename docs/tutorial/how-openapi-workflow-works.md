@@ -60,20 +60,30 @@ components:
 修改完契约后，只需在项目根目录运行一个简单的命令：
 
 ```bash
-pnpm run schema:types
+pnpm --filter frontend schema:types
 ```
 
 这个命令会做什么？
 
-它会调用我们安装的 `openapi-typescript` 工具，该工具会：
+它会找到 `frontend` 工作区，并执行其中的 `schema:types` 脚本。该脚本定义在 `frontend/package.json` 中：
 
-1.  读取 `api/openapi.yaml` 文件的最新内容。
-2.  自动生成或覆盖 `src/types/api.d.ts` 文件。
+```json
+// frontend/package.json
+"scripts": {
+  // ...
+  "schema:types": "openapi-typescript ../api/openapi.yaml --output src/types/api.d.ts"
+}
+```
 
-执行完毕后，你会在 `src/types/api.d.ts` 中看到刚刚新增的 `stock` 字段已经出现在了 `Product` 类型中。
+这个脚本会调用我们安装的 `openapi-typescript` 工具，该工具会：
+
+1.  读取项目根目录 `api/openapi.yaml` 文件的最新内容 (注意 `../api/openapi.yaml` 路径是相对于 `frontend` 目录的)。
+2.  自动生成或覆盖 `frontend/src/types/api.d.ts` 文件。
+
+执行完毕后，你会在 `frontend/src/types/api.d.ts` 中看到刚刚新增的 `stock` 字段已经出现在了 `Product` 类型中。
 
 ```typescript
-// src/types/api.d.ts - 这个文件是自动生成的，请勿手动修改！
+// frontend/src/types/api.d.ts - 这个文件是自动生成的，请勿手动修改！
 
 export type paths = { ... };
 
@@ -123,4 +133,4 @@ function ProductDetailCard({ product }: { product: Product }) {
 
 **请记住**：
 
-> **API 变更，始于 `openapi.yaml`，终于 `pnpm run schema:types`。**
+> **API 变更，始于 `openapi.yaml`，终于 `pnpm --filter frontend schema:types`。**

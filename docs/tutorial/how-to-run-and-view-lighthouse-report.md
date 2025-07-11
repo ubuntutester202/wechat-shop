@@ -19,18 +19,20 @@ Lighthouse 需要在应用的**生产环境**构建版本上运行，以获取�
 
 ### 步骤 1：构建生产版本
 
-如果你的 `dist` 目录不存在或不是最新的，请先执行构建命令：
+如果你的 `frontend/dist` 目录不存在或不是最新的，请先在**项目根目录**执行构建命令：
 
 ```bash
-pnpm build
+pnpm build:frontend
 ```
+
+这会调用 `frontend` 工作区的 `build` 脚本，生成生产环境的静态文件。
 
 ### 步骤 2：启动本地预览服务器
 
-为了模拟真实的线上环境，我们需要一个 HTTP 服务器来托管 `dist` 目录中的静态文件。Vite 内置了方便的预览功能。
+为了模拟真实的线上环境，我们需要一个 HTTP 服务器来托管 `frontend/dist` 目录中的静态文件。Vite 内置了方便的预览功能。在**项目根目录**执行：
 
 ```bash
-pnpm preview
+pnpm --filter frontend preview
 ```
 
 执行后，你会在终端看到类似下面的输出，记下 `Local:` 后面显示的地址（通常是 `http://localhost:4173/`）。我们的 Lighthouse 测试将针对这个地址运行。
@@ -52,7 +54,7 @@ pnpm preview
 
 HTML 报告非常直观，包含了图表和详细解释，适合直接分析。
 
-打开一个新的终端窗口（保持 `pnpm preview` 服务器运行），执行以下命令：
+打开一个新的终端窗口（保持预览服务器运行），在**项目根目录**执行以下命令：
 
 ```bash
 npx --yes lighthouse http://localhost:4173 --output html --output-path docs/lighthouse-report.html --view
@@ -115,9 +117,9 @@ npx --yes lighthouse http://localhost:4173/cart --output html --output-path docs
 
 ## 5. 总结与回顾
 
-- **始终在生产构建版本上测试**：先 `pnpm build`，再 `pnpm preview`。
+- **始终在生产构建版本上测试**：先 `pnpm build:frontend`，再 `pnpm --filter frontend preview`。
 - **始终生成完整报告**：不要使用 `--only-categories` 等过滤标志。
 - **始终通过 HTTP 服务器查看 HTML 报告**：不要用 `file://` 协议直接打开。
 - **优先使用在线查看器**：上传 JSON 文件到官方查看器是最可靠的方式。
 
-完成测试后，记得手动停止 `pnpm preview` 和 `python -m http.server` 进程。
+完成测试后，记得手动停止预览服务器和 `python -m http.server` 进程。

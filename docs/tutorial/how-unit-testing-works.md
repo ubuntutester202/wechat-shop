@@ -65,19 +65,22 @@
 
 ### 🏗️ 文件结构
 
+所有测试文件都位于 `frontend` 工作区内，并与被测试的源文件并列存放。
+
 ```
-src/
-├── components/
-│   └── ui/
-│       ├── ProductCard.tsx
-│       └── ProductCard.test.tsx  ← 测试文件
-├── pages/
-│   └── onboarding/
-│       ├── WelcomePage.tsx
-│       └── WelcomePage.test.tsx  ← 测试文件
-└── utils/
-    ├── helpers.ts
-    └── helpers.test.ts           ← 工具函数测试
+frontend/
+└── src/
+    ├── components/
+    │   └── ui/
+    │       ├── ProductCard.tsx
+    │       └── ProductCard.test.tsx  ← 测试文件
+    ├── pages/
+    │   └── onboarding/
+    │       ├── WelcomePage.tsx
+    │       └── WelcomePage.test.tsx  ← 测试文件
+    └── utils/
+        ├── helpers.ts
+        └── helpers.test.ts           ← 工具函数测试
 ```
 
 ### 📝 测试命名规范
@@ -231,39 +234,29 @@ vi.mock("../api/products");
 ### 📊 运行覆盖率报告
 
 ```bash
-# 生成详细覆盖率报告
-pnpm run test:unit:coverage
+# 从项目根目录运行
+pnpm test:frontend:unit -- --coverage
 
-# 查看HTML报告
-open coverage/index.html
+# 查看HTML报告 (注意路径)
+open frontend/coverage/index.html
 ```
 
 ## 常用命令
 
+所有命令都建议从**项目根目录**执行，以确保 pnpm 工作区环境正确加载。
+
 ```bash
-# 运行所有单元测试
-pnpm run test:unit:run
+# 运行所有前端单元测试 (一次性)
+pnpm test:frontend:unit
 
-# 监视模式（开发时）
-pnpm run test:unit
+# 监视模式运行前端单元测试 (开发时推荐)
+pnpm --filter frontend test:unit
 
-# 覆盖率报告
-pnpm run test:unit:coverage
+# 运行所有前端测试 (包括单元测试和 Storybook 测试)
+pnpm test:frontend
 
-# UI界面测试
-pnpm run test:unit:ui
-
-# 运行传统单元测试（.test.tsx 文件）
-pnpm run test:unit:run
-
-# 运行Storybook测试
-pnpm run test:storybook:run
-
-# 运行所有测试
-pnpm run test:all
-
-# 开发模式运行传统单元测试（实时监听）
-pnpm run test:unit
+# 运行覆盖率报告
+pnpm test:frontend:unit -- --coverage
 ```
 
 ## 调试技巧

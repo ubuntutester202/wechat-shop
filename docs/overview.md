@@ -68,55 +68,33 @@ DevOps：GitHub Actions + Docker + Vercel/Render
 ## 目录结构速览
 
 ```txt
-├── public/                          # 公共资源目录
-│   ├── assets/
-│   │   └── images/                  # 图片资源
-│   ├── manifest.json               # PWA配置
-│   └── robots.txt
-├── src/                            # 源代码目录
-│   ├── pages/                      # 页面目录
-│   │   ├── auth/                   # 认证相关页面
-│   │   │   ├── login.html
-│   │   │   ├── register.html
-│   │   │   └── forgot-password.html
-│   │   ├── onboarding/             # 引导页面
-│   │   │   ├── welcome.html        # 欢迎页（首次启动）
-│   │   │   └── intro.html          # 介绍页
-│   │   ├── shop/                   # 商城页面
-│   │   ├── cart/                   # 购物车相关
-│   │   ├── order/                  # 订单相关
-│   │   ├── user/                   # 用户中心
-│   │   ├── merchant/               # 商家页面
-│   │   └── common/                 # 通用页面
-│   │       ├── error-404.html
-│   │       ├── error-500.html
-│   │       └── maintenance.html
-│   ├── assets/                     # 资源文件
-│   │   ├── css/                    # 样式文件
-│   │   ├── js/                     # JavaScript文件
-│   │   │   ├── core/               # 核心功能
-│   │   │   │   ├── app.js          # 应用入口
-│   │   │   │   ├── router.js       # 路由管理
-│   │   │   │   ├── utils.js        # 工具函数
-│   │   │   │   └── constants.js    # 常量定义
-│   │   │   ├── components/         # 组件脚本
-│   │   │   ├── pages/              # 页面脚本
-│   │   │   └── libs/               # 第三方库
-│   │   ├── images/                 # 图片资源
-│   │   ├── fonts/                  # 字体文件
-│   │   └── data/                   # 数据文件
-│   │       ├── mock/               # 模拟数据
-│   │       └── schemas/            # 数据模式
-│   ├── components/                 # 组件模板
-│   └── templates/                  # 页面模板
-│       └── base.html               # 基础模板
-├── dist/                           # 构建输出目录
-├── build/                          # 构建脚本
-│   ├── webpack.config.js
-│   ├── build.js
-│   └── dev.js
-├─docs          # 文档
-└─.github       # CI & 模板
+├── api/                             # OpenAPI 规范目录
+├── backend/                         # 后端应用 (待开发)
+│   ├── src/
+│   └── package.json
+├── docs/                            # 项目文档
+│   └── tutorial/                    # 教程文档
+├── frontend/                        # 前端应用 (Vite + React)
+│   ├── public/                      # Vite 公共资源
+│   ├── src/                         # 前端源代码
+│   │   ├── assets/                  # 静态资源 (图片、数据)
+│   │   ├── components/              # React 组件 (通用、UI)
+│   │   ├── mocks/                   # MSW Mock Service Worker 配置
+│   │   ├── pages/                   # 页面级组件
+│   │   ├── stores/                  # Zustand 状态管理
+│   │   ├── stories/                 # Storybook 文件
+│   │   ├── test/                    # Vitest 配置文件
+│   │   ├── types/                   # 类型定义
+│   │   ├── utils/                   # 工具函数
+│   │   ├── App.tsx                  # 应用根组件
+│   │   └── main.tsx                 # 应用入口
+│   ├── index.html                   # HTML 入口文件
+│   └── package.json                 # 前端依赖与脚本
+├── packages/                        # (规划中) 共享代码包
+├── tests/                           # Playwright E2E 测试
+├── .gitignore
+├── package.json                     # Monorepo 根 package.json
+└── pnpm-workspace.yaml              # pnpm 工作区配置
 ```
 
 ## 联系与支持

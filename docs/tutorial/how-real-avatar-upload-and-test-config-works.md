@@ -10,8 +10,8 @@
 
 为了保证代码的可维护性和可扩展性，我们采用了分层设计思想，将整个上传功能拆分为两个主要部分：
 
-- **通用上传工具 (`cosUploader.ts`)**：一个纯粹的、与 UI 无关的工具类，专门负责与腾讯云 COS SDK 交互，处理所有底层的上传逻辑。
-- **UI 组件 (`AvatarUploader.tsx`)**：负责所有与用户交互的界面逻辑，如显示头像、处理点击/拖拽事件、展示上传进度和错误信息。
+- **通用上传工具 (`frontend/src/utils/cosUploader.ts`)**：一个纯粹的、与 UI 无关的工具类，专门负责与腾讯云 COS SDK 交互，处理所有底层的上传逻辑。
+- **UI 组件 (`frontend/src/components/ui/AvatarUploader.tsx`)**：负责所有与用户交互的界面逻辑，如显示头像、处理点击/拖拽事件、展示上传进度和错误信息。
 
 这种设计的好处是，将来如果我们需要在项目的其他地方实现文件上传，可以直接复用 `cosUploader.ts`，而无需重写复杂的上传逻辑。
 
@@ -65,29 +65,41 @@ graph TD
 
 ### 4.2. 问题的根源
 
-经过排查，我们发现根源在于 `.storybook/main.ts` 中引入的 `@storybook/addon-vitest` 插件。这个插件为了方便 Storybook 的交互式测试，**全局性地劫持了 Vitest 的配置**，强制 `include` 选项只包含 `stories` 文件，从而排除了所有其他模式的测试文件。
+经过排查，我们发现根源在于 `frontend/.storybook/main.ts` 中引入的 `@storybook/addon-vitest` 插件。这个插件为了方便 Storybook 的交互式测试，**全局性地劫持了 Vitest 的配置**，强制 `include` 选项只包含 `stories` 文件，从而排除了所有其他模式的测试文件。
 
 ### 4.3. 解决方案：配置彻底分离
 
 为了让两种测试和谐共存，我们采取了“分而治之”的策略：
 
-1.  **清理 `vite.config.ts`**：
-    我们将主配置文件 `vite.config.ts` 恢复为**纯粹的传统单元测试配置**。明确设置 `include` 和 `exclude` 选项，确保它只关心 `*.test.tsx` 和 `*.spec.tsx` 文件，并排除所有 Storybook 相关文件。
+1.  **清理 `frontend/vite.config.ts`**：
+    我们将主配置文件 `frontend/vite.config.ts` 恢复为**纯粹的传统单元测试配置**。明确设置 `include` 和 `exclude` 选项，确保它只关心 `*.test.tsx` 和 `*.spec.tsx` 文件，并排除所有 Storybook 相关文件。
 
-2.  **创建 `vitest.storybook.config.ts`**：
+2.  **创建 `frontend/vitest.storybook.config.ts`**：
     我们新建了一个**专用于 Storybook 的 Vitest 配置文件**。在这个文件中，我们只保留了 `storybookTest()` 插件，并移除了 `include/exclude` 选项，让插件自己去管理路径（这是新版插件的推荐做法）。同时，我们还添加了 `optimizeDeps` 配置，解决了 Vite 在测试过程中因依赖变化而意外重载的问题。
 
 3.  **更新 `package.json` 脚本**：
-    我们更新了 `scripts`，为不同类型的测试创建了专门的命令：
+    我们更新了 `frontend/package.json` 和根目录 `package.json` 中的脚本，为不同类型的测试创建了专门的命令：
+
     ```json
+    // in frontend/package.json
     "scripts": {
       "test:unit:run": "vitest run",
       "test:storybook:run": "vitest run --config=vitest.storybook.config.ts",
       "test:all": "pnpm run test:unit:run && pnpm run test:storybook:run"
     }
     ```
-    - `test:unit:run` 使用默认的 `vite.config.ts`。
-    - `test:storybook:run` 通过 `--config` 标志明确指向 Storybook 的专用配置。
+
+    ```json
+    // in root package.json
+    "scripts": {
+      "test:frontend:unit": "pnpm --filter frontend test:unit:run",
+      "test:frontend:storybook": "pnpm --filter frontend test:storybook:run",
+      "test:frontend": "pnpm --filter frontend test:all"
+    }
+    ```
+
+    - `test:frontend:unit` 使用默认的 `vite.config.ts`。
+    - `test:frontend:storybook` 通过 `--config` 标志明确指向 Storybook 的专用配置。
 
 通过这套组合拳，我们成功地解决了配置冲突，实现了两种测试环境的完全隔离和正常运行。这是一个关于现代前端工具链复杂性的典型案例，也是一次宝贵的调试经验。
 
