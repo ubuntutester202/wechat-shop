@@ -27,3 +27,5 @@
 * [**如何实现头像真实上传与解决 Vitest 配置冲突**](./how-real-avatar-upload-and-test-config-works.md) - 讲解了如何将头像上传从模拟实现升级为对接腾讯云 COS 的真实上传，并记录了解决 Vite 与 Storybook 测试配置冲突的详细过程。
 
 - [**如何正确生成并查看 Lighthouse 性能报告**](./how-to-run-and-view-lighthouse-report.md): 详细分步教程，指导如何为项目生成 Lighthouse 性能报告，并讲解了如何通过本地服务器和在线查看器正确浏览报告，避免常见的“白屏”问题。
+
+- [**如何使用 OpenAPI 驱动 API 开发**](./how-openapi-workflow-works.md): 详解本项目“契约先行”的 API 开发工作流，指导开发者如何通过修改 `openapi.yaml` 契约文件并运行脚本来自动同步 API 的 TypeScript 类型。

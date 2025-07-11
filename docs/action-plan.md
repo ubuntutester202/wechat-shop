@@ -182,17 +182,17 @@
 #### Day 10
 
 - 上午：PWA 支持
-  - [ ] `pnpm add -D vite-plugin-pwa`
-  - [ ] 生成 manifest.json (名称/图标)
-  - [ ] 离线缓存首页 & 静态资源
-  - [ ] 添加安装提示
-  - [ ] 测试 Chrome DevTools 加装
+  - [-] `pnpm add -D vite-plugin-pwa` pwa 和 msw 目前会冲突，不方便加入
+  - [-] 生成 manifest.json (名称/图标)
+  - [-] 离线缓存首页 & 静态资源
+  - [-] 添加安装提示
+  - [-] 测试 Chrome DevTools 加装
 - 下午：前后端契约文档
-  - [ ] 使用 OpenAPI 3.1 草稿
-  - [ ] 定义 `GET /products` 等接口 schema
-  - [ ] 生成 `openapi.yaml` 放 `/api` 目录
-  - [ ] `pnpm add -D openapi-typescript` 生成类型
-  - [ ] README 更新如何 mock
+  - [x] 使用 OpenAPI 3.1 草稿
+  - [x] 定义 `GET /products` 等接口 schema
+  - [x] 生成 `openapi.yaml` 放 `/api` 目录
+  - [x] `pnpm add -D openapi-typescript` 生成类型
+  - [x] README 更新如何 mock
 
 #### Day 11
 

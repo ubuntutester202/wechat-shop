@@ -30,12 +30,12 @@
 
 ## 🛠️ 技术栈
 
-| 层 | 技术 |
-|---|---|
-| 前端 | React 18 · Vite · TypeScript · TailwindCSS · Zustand · MSW |
-| 后端 | NestJS · PostgreSQL · Prisma ORM · Redis · BullMQ |
-| DevOps | GitHub Actions · Docker · Vercel (Web) · Render (API) |
-| 支付 | 微信支付 v3 SDK |
+| 层     | 技术                                                       |
+| ------ | ---------------------------------------------------------- |
+| 前端   | React 18 · Vite · TypeScript · TailwindCSS · Zustand · MSW |
+| 后端   | NestJS · PostgreSQL · Prisma ORM · Redis · BullMQ          |
+| DevOps | GitHub Actions · Docker · Vercel (Web) · Render (API)      |
+| 支付   | 微信支付 v3 SDK                                            |
 
 ## 🚀 快速开始
 
@@ -57,6 +57,19 @@ $ pnpm test
 ```
 
 > 📖 本地开发需提前准备 PostgreSQL & Redis，或修改 `.env.dev` 连接字符串指向 docker-compose 服务。
+
+## 📝 API 契约与类型生成
+
+本项目的接口遵循 [OpenAPI 3.1](https://www.openapis.org/) 规范，契约文件位于 [`/api/openapi.yaml`](/api/openapi.yaml)。它统一了前后端的接口定义。
+
+当后端接口发生变更时，请先更新此 `openapi.yaml` 文件。然后，运行以下命令来自动生成前端所需的 TypeScript 类型定义：
+
+```bash
+# 生成 src/types/api.d.ts
+$ pnpm run schema:types
+```
+
+这将确保前端代码中的数据结构与后端保持同步，提升开发效率和代码健壮性。
 
 ## 📚 文档索引
 
