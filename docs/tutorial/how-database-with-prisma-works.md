@@ -9,11 +9,13 @@
 在开始之前，请确保你的开发环境满足以下条件：
 
 ### 必需软件
+
 - **Docker Desktop**：用于运行 PostgreSQL 数据库和后端服务
 - **Node.js**：版本 18+ （用于本地开发和依赖管理）
 - **pnpm**：包管理器（如果没有安装，运行 `npm install -g pnpm`）
 
 ### 环境检查命令
+
 ```bash
 # 检查 Docker 是否正常运行
 docker --version
@@ -27,7 +29,9 @@ pnpm --version
 ```
 
 ### 项目结构确认
+
 确保你的项目根目录包含以下文件：
+
 - `docker-compose.yml`
 - `backend/` 目录
 - `backend/Dockerfile`
@@ -39,6 +43,7 @@ pnpm --version
 如果你是第一次搭建这个后端环境，请按照以下步骤操作：
 
 ### 步骤 1：克隆项目并安装依赖
+
 ```bash
 # 进入项目根目录
 cd plan3-online-sales-wechat
@@ -50,7 +55,9 @@ cd ..
 ```
 
 ### 步骤 2：检查环境配置文件
+
 确保 `backend/.env.dev` 文件存在且包含正确的配置：
+
 ```bash
 # 检查文件是否存在
 ls backend/.env.dev
@@ -60,6 +67,7 @@ cat backend/.env.dev
 ```
 
 应该包含类似以下内容：
+
 ```env
 # For backend service
 NODE_ENV=development
@@ -72,7 +80,15 @@ POSTGRES_PASSWORD=password
 POSTGRES_DB=wechat-shop
 ```
 
+如果你想使用生产环境配置，需要修改 docker-compose.yml ：
+
+```yaml
+env_file:
+  - ./backend/.env.prod # 改为生产环境
+```
+
 ### 步骤 3：启动 Docker 服务
+
 ```bash
 # 构建并启动所有服务（数据库 + 后端）
 docker-compose up -d --build
@@ -82,12 +98,14 @@ docker-compose ps
 ```
 
 ### 步骤 4：执行数据库迁移
+
 ```bash
 # 在后端容器中执行 Prisma 迁移
 docker-compose exec backend npx prisma migrate dev --name init
 ```
 
 ### 步骤 5：测试 API 是否正常
+
 ```bash
 # 测试基本端点
 curl http://localhost:3001
@@ -99,12 +117,14 @@ curl http://localhost:3001/users
 ```
 
 或者在浏览器中访问：
+
 - `http://localhost:3001` - 应该显示 "Hello World!"
 - `http://localhost:3001/users` - 应该显示空数组 `[]`
 
 ### 常见问题排查
 
 **问题 1：容器启动失败**
+
 ```bash
 # 查看容器日志
 docker-compose logs backend
@@ -112,6 +132,7 @@ docker-compose logs postgres
 ```
 
 **问题 2：数据库连接失败**
+
 ```bash
 # 重启服务
 docker-compose restart backend
@@ -121,6 +142,7 @@ docker-compose exec postgres pg_isready -U postgres
 ```
 
 **问题 3：端口被占用**
+
 ```bash
 # 检查端口占用情况
 netstat -ano | findstr :3001
@@ -147,7 +169,7 @@ graph TD
     L --> M[检查端口占用<br/>netstat -ano];
     M --> N[重启服务<br/>docker-compose restart];
     N --> H;
-    
+
     style J fill:#90EE90
     style K fill:#FFB6C1
 ```
@@ -161,16 +183,19 @@ graph TD
 这是一个非常好的问题！原因如下：
 
 #### 1. **构建时 vs 运行时的区别**
+
 - **Docker 构建阶段**（`docker-compose up -d --build`）：此时数据库容器还没有启动
 - **Prisma 迁移需要**：连接到**正在运行**的数据库，这只能在容器启动后进行
 - **时序问题**：构建是静态的，迁移是动态的，需要活跃的数据库连接
 
 #### 2. **开发环境 vs 生产环境**
+
 - `prisma migrate dev` 是**开发专用**命令，包含交互式确认
 - 生产环境应该使用 `prisma migrate deploy`，这是非交互式的
 - 在 Dockerfile 中硬编码开发命令会导致生产部署问题
 
 #### 3. **数据库状态管理**
+
 - 迁移是**一次性操作**，不应该每次容器重启都执行
 - 需要检查数据库当前状态来决定是否需要迁移
 - 重复执行迁移可能导致数据丢失或结构冲突
@@ -178,13 +203,16 @@ graph TD
 #### 4. **最佳实践对比**
 
 ❌ **错误做法**（在 Dockerfile 中）：
+
 ```dockerfile
 # 这样做是错误的
 RUN npx prisma migrate dev --name init
 ```
+
 问题：构建时数据库还没启动，会失败
 
 ✅ **正确做法**（分离关注点）：
+
 ```bash
 # 1. 先构建和启动容器
 docker-compose up -d --build
@@ -198,6 +226,7 @@ docker-compose exec backend npx prisma migrate dev --name init
 如果你想要更自动化的体验，可以考虑：
 
 **方案 A：启动脚本**
+
 ```bash
 # 创建 scripts/start-dev.sh
 #!/bin/bash
@@ -209,6 +238,7 @@ echo "后端环境已就绪！"
 ```
 
 **方案 B：健康检查 + 初始化容器**
+
 ```yaml
 # docker-compose.yml 中添加
 services:
@@ -223,6 +253,7 @@ services:
 ```
 
 但目前的手动方案实际上是**最佳实践**，因为它：
+
 - 给了开发者对数据库迁移的完全控制权
 - 避免了自动化脚本可能带来的隐藏问题
 - 让每一步都透明可见，便于调试
@@ -603,7 +634,6 @@ services:
    - 可以通过 `docker volume inspect pgdata` 查看 volume 详情
 
 2. **数据持久性**：
-
    - 容器重启：✅ 数据保留
    - Docker Desktop 重启：✅ 数据保留
    - Windows 重启：✅ 数据保留
@@ -631,12 +661,10 @@ services:
    ```
 
 2. **命名规则解析**：
-
    - `20250711145155`: 时间戳（年月日时分秒）
    - `init`: 迁移的描述性名称
 
 3. **迁移文件的作用**：
-
    - 记录数据库结构的变更历史
    - 确保所有开发环境的数据库结构一致
    - 支持数据库的版本回滚
@@ -650,7 +678,6 @@ services:
    ```
 
    这个命令会：
-
    - 分析 `schema.prisma` 的变更
    - 生成新的迁移文件
    - 自动应用迁移到数据库
@@ -671,7 +698,6 @@ services:
    ```
 
    这些 SQL 语句定义了数据库的具体结构，包括：
-
    - 枚举类型的创建
    - 表的创建
    - 字段定义
@@ -679,7 +705,6 @@ services:
    - 索引创建
 
 6. **最佳实践**：
-
    - 将迁移文件提交到版本控制系统
    - 每次修改数据模型后及时创建迁移
    - 在应用新迁移前备份数据库
