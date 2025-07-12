@@ -21,7 +21,7 @@ yarn-error.log*
 lerna-debug.log*
 
 # environment variables
-.env
+!.env
 .env*.local
 .env.development.local
 .env.test.local
@@ -39,7 +39,7 @@ lerna-debug.log*
 # NestJS
 /dist
 /node_modules
-.env
-.env.dev
-.env.prod 
+!.env
+!.env.dev
+!.env.prod 
 /generated/prisma
