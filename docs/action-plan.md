@@ -231,7 +231,7 @@
 #### Day 13
 
 - 上午：用户模块 & JWT
-  - [ ] nest g module user / service / controller
+  - [x] nest g module user / service / controller
   - [ ] 注册、登录、加密 `bcrypt`
   - [ ] 签发 JWT、守卫 `AuthGuard`
   - [ ] Postman 测试通过
