@@ -239,7 +239,7 @@
 - 下午：商品模块 API
   - [x] 列表、详情、搜索分页
   - [x] Prisma 查询优化 `select`
-  - [ ] Swagger Decorator 添加
+  - [x] Swagger Decorator 添加
   - [x] 响应 DTO & 验证管道
   - [x] 10 条种子商品生成
 

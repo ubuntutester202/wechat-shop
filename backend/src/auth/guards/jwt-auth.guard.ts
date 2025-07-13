@@ -22,6 +22,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     }
     
+    // 排除 Swagger 文档路径
+    const request = context.switchToHttp().getRequest();
+    const url = request.url;
+    if (url.startsWith('/api') || url.startsWith('/api-json') || url.startsWith('/api-yaml')) {
+      return true;
+    }
+    
     return super.canActivate(context);
   }
 }
