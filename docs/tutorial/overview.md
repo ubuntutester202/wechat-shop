@@ -35,3 +35,7 @@
 - [**NestJS 用户模块生成深度解析：从命令行到模块化架构的完整实现**](./how-nestjs-user-module-generation-works.md): 全面解析 NestJS 用户模块的生成过程，从 CLI 命令执行到模块化架构的建立，深入讲解模块、服务、控制器的创建流程，以及与 Prisma 数据模型的集成方案，为后续用户认证和权限管理功能奠定坚实基础。
 - [**用户认证与密码加密系统工作原理**](./how-authentication-and-encryption-works.md): 详细解析项目中的用户认证系统，包括用户注册、登录验证以及bcrypt密码加密的完整实现流程。从用户提交表单到JWT令牌生成的整个认证链路，涵盖多种登录方式、安全最佳实践和API测试示例。
 - [**开发环境使用说明**](./README-Development.md): 通俗易懂说明如何在本地开发环境中运行项目。
+
+- [**AuthService 单元测试教程**](./how-auth-service-unit-testing-works.md): 深入解析 NestJS 中 AuthService 的单元测试实现，涵盖用户注册、登录验证、JWT 令牌生成等核心功能的测试策略，以及 Prisma 服务的 Mock 技巧和测试最佳实践。
+- [**UserService 单元测试教程**](./how-user-service-unit-testing-works.md): 全面讲解 UserService 单元测试的设计与实现，包括用户创建、查找、密码验证、信息更新等功能的测试用例编写，以及依赖注入、Mock 管理和异常处理的测试策略。
+- [**npm test 故障排除教程**](./how-npm-test-troubleshooting-works.md): 系统性介绍 NestJS 项目中测试失败的排查和解决方法，通过实际案例分析集成测试数据污染和控制器依赖注入问题的解决策略，提供完整的测试故障排除指南。

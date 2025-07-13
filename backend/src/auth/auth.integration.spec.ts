@@ -18,17 +18,32 @@ describe('Auth Integration Tests', () => {
     await app.init();
   });
 
+  beforeEach(async () => {
+    // 清理测试数据
+    await prisma.user.deleteMany({
+      where: {
+        email: 'test@example.com',
+      },
+    });
+  });
+
   afterAll(async () => {
+    // 清理所有测试数据
+    await prisma.user.deleteMany({
+      where: {
+        email: 'test@example.com',
+      },
+    });
     await app.close();
   });
 
-  describe('JWT Authentication', () => {
-    const testUser = {
-      email: 'test@example.com',
-      password: 'password123',
-      nickname: 'Test User',
-    };
+  const testUser = {
+    email: 'test@example.com',
+    password: 'password123',
+    nickname: 'Test User',
+  };
 
+  describe('JWT Authentication', () => {
     it('should register a new user', async () => {
       const response = await request(app.getHttpServer())
         .post('/auth/register')
@@ -41,20 +56,30 @@ describe('Auth Integration Tests', () => {
     });
 
     it('should login with valid credentials', async () => {
+      // 先注册用户
+      await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(testUser);
+        
       const response = await request(app.getHttpServer())
         .post('/auth/login')
         .send({
           email: testUser.email,
           password: testUser.password,
-        })
-        .expect(200);
+        });
 
+      expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.email).toBe(testUser.email);
       expect(response.body.data.token).toBeDefined();
     });
 
     it('should access protected route with valid token', async () => {
+      // 先注册用户
+      await request(app.getHttpServer())
+        .post('/auth/register')
+        .send(testUser);
+        
       // First login to get token
       const loginResponse = await request(app.getHttpServer())
         .post('/auth/login')
@@ -62,7 +87,11 @@ describe('Auth Integration Tests', () => {
           email: testUser.email,
           password: testUser.password,
         });
-
+      
+      expect(loginResponse.status).toBe(200);
+      expect(loginResponse.body.data).toBeDefined();
+      expect(loginResponse.body.data.token).toBeDefined();
+      
       const token = loginResponse.body.data.token;
 
       // Access protected route
