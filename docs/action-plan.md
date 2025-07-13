@@ -232,9 +232,9 @@
 
 - 上午：用户模块 & JWT
   - [x] nest g module user / service / controller
-  - [ ] 注册、登录、加密 `bcrypt`
-  - [ ] 签发 JWT、守卫 `AuthGuard`
-  - [ ] Postman 测试通过
+  - [x] 注册、登录、加密 `bcrypt`
+  - [x] 签发 JWT、守卫 `AuthGuard`
+  - [x] Postman 测试通过
   - [ ] 单元测试 service
 - 下午：商品模块 API
   - [ ] 列表、详情、搜索分页
