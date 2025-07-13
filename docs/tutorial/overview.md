@@ -33,3 +33,5 @@
 - [**NestJS 后端项目准备教程**](./how-to-prepare-a-NestJs-backend-project.md.md): 详细分步教程，指导如何从零开始初始化一个 NestJS 项目，并完成环境配置、Docker 容器化以及 Docker Compose 编排，为后续的业务开发打下坚实基础。
 - [**如何使用 Prisma 为 NestJS 项目搭建数据库**](./how-database-with-prisma-works.md): 详细介绍了为后端引入并配置 Prisma ORM 和 PostgreSQL 数据库的完整流程，并记录了在 Docker 环境中遇到的关键问题（如 `node:20-slim` 镜像的选择）及其解决方案。
 - [**NestJS 用户模块生成深度解析：从命令行到模块化架构的完整实现**](./how-nestjs-user-module-generation-works.md): 全面解析 NestJS 用户模块的生成过程，从 CLI 命令执行到模块化架构的建立，深入讲解模块、服务、控制器的创建流程，以及与 Prisma 数据模型的集成方案，为后续用户认证和权限管理功能奠定坚实基础。
+- [**用户认证与密码加密系统工作原理**](./how-authentication-and-encryption-works.md): 详细解析项目中的用户认证系统，包括用户注册、登录验证以及bcrypt密码加密的完整实现流程。从用户提交表单到JWT令牌生成的整个认证链路，涵盖多种登录方式、安全最佳实践和API测试示例。
+- [**开发环境使用说明**](./README-Development.md): 通俗易懂说明如何在本地开发环境中运行项目。

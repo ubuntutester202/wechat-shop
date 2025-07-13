@@ -21,8 +21,11 @@ RUN pnpm prisma:generate
 # 7. Copy the rest of your app's source code from your host to your image filesystem.
 COPY . .
 
-# 8. Build the app
-RUN pnpm run build
+# 8. Expose port
+EXPOSE 3001
+
+# 9. Development command (will be overridden by docker-compose)
+CMD ["pnpm", "run", "start:dev"]
 
 # 9. Start a new stage for production
 FROM node:20-slim AS production
