@@ -237,11 +237,11 @@
   - [x] Postman 测试通过
   - [x] 单元测试 service。运行cd backend && npm test
 - 下午：商品模块 API
-  - [ ] 列表、详情、搜索分页
-  - [ ] Prisma 查询优化 `select`
+  - [x] 列表、详情、搜索分页
+  - [x] Prisma 查询优化 `select`
   - [ ] Swagger Decorator 添加
-  - [ ] 响应 DTO & 验证管道
-  - [ ] 10 条种子商品生成
+  - [x] 响应 DTO & 验证管道
+  - [x] 10 条种子商品生成
 
 #### Day 14
 
