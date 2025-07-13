@@ -40,3 +40,4 @@
 - [**UserService 单元测试教程**](./how-user-service-unit-testing-works.md): 全面讲解 UserService 单元测试的设计与实现，包括用户创建、查找、密码验证、信息更新等功能的测试用例编写，以及依赖注入、Mock 管理和异常处理的测试策略。
 - [**npm test 故障排除教程**](./how-npm-test-troubleshooting-works.md): 系统性介绍 NestJS 项目中测试失败的排查和解决方法，通过实际案例分析集成测试数据污染和控制器依赖注入问题的解决策略，提供完整的测试故障排除指南。
 - [**商品模块 API 实现教程**](./how-product-api-module-works.md): 详细介绍商品模块 API 的完整实现过程，包括数据模型设计、服务层逻辑、控制器接口以及数据传输对象（DTO）的定义。涵盖商品列表、详情、搜索分页、查询优化、单元测试等核心功能的技术实现和最佳实践。
+- [**NestJS Swagger API 文档集成教程**](./how-nestjs-swagger-api-documentation-works.md): 全面解析 NestJS 项目中 Swagger API 文档的集成实现，从基础配置到装饰器应用，从 DTO 定义到复杂类型处理。详细介绍控制器文档化、响应格式标准化、认证集成等核心技术，以及解决 DTO 显示为空等常见问题的最佳实践。
