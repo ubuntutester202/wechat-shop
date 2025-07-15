@@ -706,7 +706,7 @@ components:
           type: string
         status:
           type: string
-          enum: [pending, paid, shipped, delivered, cancelled]
+          enum: [pending, paid, shipped, delivered, cancelled, refunded]
         items:
           type: array
           items:

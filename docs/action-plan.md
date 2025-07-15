@@ -246,10 +246,10 @@
 #### Day 14
 
 - 上午：购物车 & 订单逻辑
-  - [ ] 添加/修改/删除 CartItem API
-  - [ ] 结算金额计算服务抽象
-  - [ ] 生成订单号 (雪花算法或 UUID)
-  - [ ] 订单状态枚举 draft/paid/failed
+  - [x] 添加/修改/删除 CartItem API
+  - [x] 结算金额计算服务抽象
+  - [x] 生成订单号 (雪花算法或 UUID)
+  - [x] 订单状态枚举 pending/paid/shipped/delivered/cancelled/refunded
   - [ ] E2E 测试 Cart → Order
 - 下午：微信支付沙箱接入
   - [ ] 注册沙箱 key，下载证书
