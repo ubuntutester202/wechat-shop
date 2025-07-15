@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "pnpm --filter frontend dev",
-    "dev:frontend": "pnpm --filter frontend dev", 
+    "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
     "build": "pnpm --filter frontend build",
     "build:frontend": "pnpm --filter frontend build",
@@ -24,11 +24,14 @@
     "install:all": "pnpm install"
   },
   "devDependencies": {
-    "@playwright/test": "^1.42.1",
+    "@playwright/test": "^1.53.2",
     "playwright": "^1.53.2"
   },
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
+  },
+  "dependencies": {
+    "playwright-core": "^1.54.1"
   }
-} 
+}
