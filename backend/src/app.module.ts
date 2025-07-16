@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { WinstonModule } from 'nest-winston';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
@@ -11,6 +13,9 @@ import { ProductModule } from './product/product.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { PayModule } from './pay/pay.module';
+import { loggerConfig, productionLoggerConfig } from './config/logger.config';
+import { AppLoggerService } from './common/logger.service';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 @Module({
   imports: [
@@ -18,6 +23,28 @@ import { PayModule } from './pay/pay.module';
       envFilePath: getEnvFilePath(),
       isGlobal: true,
     }),
+    WinstonModule.forRoot(
+      process.env.NODE_ENV === 'production' 
+        ? productionLoggerConfig 
+        : loggerConfig
+    ),
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: 1000, // 1 秒
+        limit: 3, // 每秒最多 3 个请求
+      },
+      {
+        name: 'medium',
+        ttl: 10000, // 10 秒
+        limit: 20, // 每 10 秒最多 20 个请求
+      },
+      {
+        name: 'long',
+        ttl: 60000, // 1 分钟
+        limit: 100, // 每分钟最多 100 个请求
+      },
+    ]),
     UserModule,
     AuthModule,
     ProductModule,
@@ -29,9 +56,18 @@ import { PayModule } from './pay/pay.module';
   providers: [
     AppService,
     PrismaService,
+    AppLoggerService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })

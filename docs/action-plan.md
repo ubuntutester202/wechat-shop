@@ -289,11 +289,11 @@
   - [-] 前端支付成功界面
   - [-] 日志 & 失败重试策略
 - 下午：安全 & 日志
-  - [ ] Helmet 中间件、RateLimit
-  - [ ] Winston 日志到文件 & 控制台
-  - [ ] 生产日志分级 error/info/debug
-  - [ ] Swagger Auth token 全局 header
-  - [ ] Week 3 Summary & 文档同步
+  - [x] Helmet 中间件、RateLimit
+  - [x] Winston 日志到文件 & 控制台
+  - [x] 生产日志分级 error/info/debug
+  - [-] Swagger Auth token 全局 header
+  - [-] Week 3 Summary & 文档同步
 
 ---
 

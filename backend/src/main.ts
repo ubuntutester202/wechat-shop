@@ -2,10 +2,31 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // 配置 Winston 日志
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
+
+  // 安全中间件 - Helmet
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
+    },
+    crossOriginEmbedderPolicy: false, // 为了兼容 Swagger UI
+  }));
+
+  logger.log('安全中间件 Helmet 已启用', 'Bootstrap');
 
   // 设置全局前缀
   // app.setGlobalPrefix('api');
@@ -58,6 +79,11 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') ?? 3000;
 
+  logger.log(`应用启动在端口: ${port}`, 'Bootstrap');
+  logger.log(`Swagger API 文档: http://localhost:${port}/api`, 'Bootstrap');
+  logger.log(`环境: ${process.env.NODE_ENV || 'development'}`, 'Bootstrap');
+  logger.log(`日志级别: ${process.env.LOG_LEVEL || 'info'}`, 'Bootstrap');
+  
   console.log(`Application is running on: http://localhost:${port}`);
   console.log(`Swagger API documentation: http://localhost:${port}/api`);
   await app.listen(port);
