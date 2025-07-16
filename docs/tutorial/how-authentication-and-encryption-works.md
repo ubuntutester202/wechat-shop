@@ -9,6 +9,7 @@
 ## 🎯 为什么需要 JWT 认证？
 
 在现代 Web 应用中，我们需要：
+
 - **无状态认证**：服务器不需要存储会话信息，便于水平扩展
 - **跨域支持**：JWT 可以在不同域名间安全传递
 - **移动端友好**：适合微信小程序等移动应用场景
@@ -28,7 +29,7 @@ flowchart TD
     E --> F[bcrypt密码加密/验证]
     F --> G[JWT令牌生成]
     G --> H[返回认证结果]
-    
+
     I[受保护的API请求] --> J[JwtAuthGuard验证]
     J --> K[JwtStrategy解析令牌]
     K --> L[验证通过，允许访问]
@@ -60,18 +61,18 @@ graph TB
         A3[JwtStrategy]
         A4[JwtAuthGuard]
     end
-    
+
     subgraph "业务层"
         B1[UserService]
         B2[bcrypt加密]
         B3[数据验证]
     end
-    
+
     subgraph "数据层"
         C1[Prisma ORM]
         C2[PostgreSQL]
     end
-    
+
     A1 --> A2
     A2 --> B1
     A3 --> A4
@@ -122,6 +123,7 @@ if (password) {
 ```
 
 **工作原理**：
+
 1. **Salt轮数**：使用10轮salt生成，平衡安全性和性能
 2. **单向加密**：bcrypt是单向哈希函数，无法逆向解密
 3. **随机盐值**：每次加密都会生成不同的盐值，相同密码产生不同哈希
@@ -135,6 +137,7 @@ async validatePassword(password: string, hashedPassword: string): Promise<boolea
 ```
 
 **验证流程**：
+
 1. 用户输入明文密码
 2. bcrypt.compare()将明文密码与存储的哈希值比较
 3. 返回布尔值表示密码是否正确
@@ -270,6 +273,7 @@ export class RegisterDto {
 ```
 
 **验证规则**：
+
 - 邮箱格式验证
 - 密码最少6位
 - 支持可选字段（微信登录时某些字段可为空）
@@ -291,7 +295,7 @@ async register(registerDto: RegisterDto) {
 
   const user = await this.userService.create(registerDto);
   const payload = { email: user.email, sub: user.id, role: user.role };
-  
+
   return {
     access_token: this.jwtService.sign(payload),
     user,
@@ -300,6 +304,7 @@ async register(registerDto: RegisterDto) {
 ```
 
 **关键逻辑**：
+
 1. **多种注册方式**：支持邮箱、手机号、微信OpenID
 2. **条件验证**：邮箱/手机号注册必须提供密码
 3. **JWT生成**：注册成功后立即生成访问令牌
@@ -344,6 +349,7 @@ async create(createUserDto: RegisterDto): Promise<Omit<User, 'password'>> {
 ```
 
 **安全措施**：
+
 1. **唯一性检查**：防止重复注册
 2. **密码加密**：使用bcrypt加密存储
 3. **敏感信息过滤**：返回结果不包含密码
@@ -393,7 +399,7 @@ async login(loginDto: LoginDto) {
   // 生成JWT令牌
   const payload = { email: user.email, sub: user.id, role: user.role };
   const { password, ...userWithoutPassword } = user;
-  
+
   return {
     access_token: this.jwtService.sign(payload),
     user: userWithoutPassword,
@@ -402,6 +408,7 @@ async login(loginDto: LoginDto) {
 ```
 
 **登录方式支持**：
+
 1. **邮箱+密码**：传统登录方式
 2. **手机号+密码**：移动端常用
 3. **微信OpenID**：第三方登录
@@ -419,7 +426,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET') || 'your-secret-key',
+      secretOrKey: configService.get<string>("JWT_SECRET") || "your-secret-key",
     });
   }
 
@@ -434,6 +441,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 ```
 
 **配置说明**：
+
 - **令牌提取**：从Authorization头的Bearer令牌中提取
 - **过期检查**：自动检查令牌是否过期
 - **密钥配置**：从环境变量读取JWT密钥
@@ -451,6 +459,7 @@ async getProfile(@Request() req) {
 ```
 
 **保护机制**：
+
 1. **自动验证**：JwtAuthGuard自动验证请求中的JWT令牌
 2. **用户注入**：验证成功后将用户信息注入到req.user
 3. **权限控制**：可基于用户角色进行进一步权限控制
@@ -465,11 +474,11 @@ async getProfile(@Request() req) {
 JwtModule.registerAsync({
   imports: [ConfigModule],
   useFactory: async (configService: ConfigService) => ({
-    secret: configService.get<string>('JWT_SECRET') || 'your-secret-key',
-    signOptions: { expiresIn: '24h' },
+    secret: configService.get<string>("JWT_SECRET") || "your-secret-key",
+    signOptions: { expiresIn: "24h" },
   }),
   inject: [ConfigService],
-})
+});
 ```
 
 ### 环境变量
@@ -487,8 +496,9 @@ JWT_EXPIRES_IN=24h
 ### 1. 注册用户测试
 
 **测试请求：**
+
 ```bash
-curl -X POST http://localhost:3001/auth/register \
+curl -X POST http://localhost:3000/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "newtest@example.com",
@@ -498,6 +508,7 @@ curl -X POST http://localhost:3001/auth/register \
 ```
 
 **实际响应：**
+
 ```json
 {
   "success": true,
@@ -524,8 +535,9 @@ curl -X POST http://localhost:3001/auth/register \
 ### 2. 登录测试
 
 **测试请求：**
+
 ```bash
-curl -X POST http://localhost:3001/auth/login \
+curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "newtest@example.com",
@@ -534,6 +546,7 @@ curl -X POST http://localhost:3001/auth/login \
 ```
 
 **实际响应：**
+
 ```json
 {
   "success": true,
@@ -560,12 +573,14 @@ curl -X POST http://localhost:3001/auth/login \
 ### 3. 访问受保护资源测试
 
 **测试请求：**
+
 ```bash
-curl -X GET http://localhost:3001/auth/profile \
+curl -X GET http://localhost:3000/auth/profile \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5ld3Rlc3RAZXhhbXBsZS5jb20iLCJzdWIiOiJjbWQxYW8zNGUwMDAxcXAxMGtzdXR4ejhoIiwicm9sZSI6IkJVWUVSIiwiaWF0IjoxNzUyMzg4MjI4LCJleHAiOjE3NTI0NzQ2Mjh9.2PcPfyH_in8df4oZmrocmdaydDniDlAuuyZ3lGN_AiU"
 ```
 
 **实际响应：**
+
 ```json
 {
   "success": true,
@@ -589,12 +604,14 @@ curl -X GET http://localhost:3001/auth/profile \
 ### 4. 无效Token测试
 
 **测试请求：**
+
 ```bash
-curl -X GET http://localhost:3001/auth/profile \
+curl -X GET http://localhost:3000/auth/profile \
   -H "Authorization: Bearer invalid-token"
 ```
 
 **实际响应：**
+
 ```json
 {
   "message": "Unauthorized",
@@ -605,11 +622,13 @@ curl -X GET http://localhost:3001/auth/profile \
 ### 5. 公共路由测试
 
 **测试请求：**
+
 ```bash
-curl -X GET http://localhost:3001/
+curl -X GET http://localhost:3000/
 ```
 
 **实际响应：**
+
 ```
 Hello World!
 ```
@@ -617,11 +636,13 @@ Hello World!
 ### 6. 无Token访问受保护资源测试
 
 **测试请求：**
+
 ```bash
-curl -X GET http://localhost:3001/auth/profile
+curl -X GET http://localhost:3000/auth/profile
 ```
 
 **实际响应：**
+
 ```json
 {
   "message": "Unauthorized",
@@ -645,16 +666,19 @@ curl -X GET http://localhost:3001/auth/profile
 ## 🔒 安全最佳实践
 
 ### 1. 密码安全
+
 - ✅ 使用bcrypt加密，salt轮数为10
 - ✅ 密码最少6位要求
 - ✅ 返回结果中过滤密码字段
 
 ### 2. JWT安全
+
 - ✅ 使用强密钥（从环境变量读取）
 - ✅ 设置合理的过期时间（24小时）
 - ✅ 使用Bearer令牌传输
 
 ### 3. 错误处理
+
 - ✅ 统一的错误消息（避免信息泄露）
 - ✅ 适当的HTTP状态码
 - ✅ 详细的异常类型区分
@@ -666,10 +690,11 @@ curl -X GET http://localhost:3001/auth/profile
 **问题**：登录时提示密码错误
 
 **排查步骤**：
+
 ```typescript
 // 检查密码是否正确加密
-const isValid = await bcrypt.compare('原始密码', '存储的哈希值');
-console.log('密码验证结果:', isValid);
+const isValid = await bcrypt.compare("原始密码", "存储的哈希值");
+console.log("密码验证结果:", isValid);
 ```
 
 ### 2. JWT令牌无效
@@ -677,6 +702,7 @@ console.log('密码验证结果:', isValid);
 **问题**：访问受保护资源时401错误
 
 **排查步骤**：
+
 1. 检查JWT_SECRET环境变量
 2. 验证令牌格式：`Bearer <token>`
 3. 检查令牌是否过期
@@ -686,6 +712,7 @@ console.log('密码验证结果:', isValid);
 **问题**：邮箱或手机号已存在
 
 **解决方案**：
+
 - 前端添加重复检查
 - 后端返回明确的错误信息
 - 考虑添加找回密码功能

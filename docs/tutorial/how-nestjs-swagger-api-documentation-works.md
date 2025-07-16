@@ -21,20 +21,20 @@ graph TB
     A[NestJS Application] --> B[Swagger Module]
     B --> C[DocumentBuilder]
     C --> D[API Configuration]
-    
+
     E[Controllers] --> F[ApiTags]
     E --> G[ApiOperation]
     E --> H[ApiResponse]
-    
+
     I[DTOs] --> J[ApiProperty]
     I --> K[ApiPropertyOptional]
-    
+
     L[Guards & Decorators] --> M[Public]
     L --> N[JWT Auth]
-    
+
     B --> O[Swagger UI]
     O --> P[Interactive Documentation]
-    
+
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style O fill:#e8f5e8
@@ -53,36 +53,36 @@ npm install @nestjs/swagger swagger-ui-express
 #### 1.2 主应用配置 (main.ts)
 
 ```typescript
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   // Swagger API 文档配置
   const config = new DocumentBuilder()
-    .setTitle('在线销售平台 API')
-    .setDescription('微信小程序在线销售平台的后端API文档')
-    .setVersion('1.0')
-    .addTag('用户管理', '用户注册、登录、个人信息管理')
-    .addTag('商品管理', '商品列表、详情、搜索、分类')
-    .addTag('购物车', '购物车增删改查')
-    .addTag('订单管理', '订单创建、查询、状态管理')
-    .addTag('支付', '微信支付相关接口')
+    .setTitle("在线销售平台 API")
+    .setDescription("微信小程序在线销售平台的后端API文档")
+    .setVersion("1.0")
+    .addTag("用户管理", "用户注册、登录、个人信息管理")
+    .addTag("商品管理", "商品列表、详情、搜索、分类")
+    .addTag("购物车", "购物车增删改查")
+    .addTag("订单管理", "订单创建、查询、状态管理")
+    .addTag("支付", "微信支付相关接口")
     .addBearerAuth(
       {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'JWT',
-        description: 'Enter JWT token',
-        in: 'header',
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        name: "JWT",
+        description: "Enter JWT token",
+        in: "header",
       },
-      'JWT-auth',
+      "JWT-auth"
     )
     .build();
-  
+
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document, {
+  SwaggerModule.setup("api", app, document, {
     swaggerOptions: {
       persistAuthorization: true,
     },
@@ -91,6 +91,7 @@ async function bootstrap() {
 ```
 
 **关键配置说明：**
+
 - `setTitle()`: 设置 API 文档标题
 - `addTag()`: 为不同模块添加标签分组
 - `addBearerAuth()`: 配置 JWT 认证
@@ -101,10 +102,10 @@ async function bootstrap() {
 #### 2.1 控制器级别装饰器
 
 ```typescript
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from "@nestjs/swagger";
 
-@ApiTags('商品管理')
-@Controller('products')
+@ApiTags("商品管理")
+@Controller("products")
 export class ProductController {
   // 控制器实现
 }
@@ -113,12 +114,12 @@ export class ProductController {
 #### 2.2 方法级别装饰器
 
 ```typescript
-@ApiOperation({ 
-  summary: '获取商品列表', 
-  description: '分页获取商品列表，支持搜索、筛选和排序' 
+@ApiOperation({
+  summary: '获取商品列表',
+  description: '分页获取商品列表，支持搜索、筛选和排序'
 })
-@ApiResponse({ 
-  status: 200, 
+@ApiResponse({
+  status: 200,
   description: '获取成功',
   schema: {
     type: 'object',
@@ -137,6 +138,7 @@ async findAll(@Query(ValidationPipe) query: ProductQueryDto) {
 ```
 
 **装饰器功能说明：**
+
 - `@ApiTags()`: 为控制器分组
 - `@ApiOperation()`: 描述 API 操作
 - `@ApiResponse()`: 定义响应格式
@@ -148,26 +150,26 @@ async findAll(@Query(ValidationPipe) query: ProductQueryDto) {
 #### 3.1 查询 DTO 示例
 
 ```typescript
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsInt, Min, IsEnum } from 'class-validator';
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { IsOptional, IsString, IsInt, Min, IsEnum } from "class-validator";
 
 export class ProductQueryDto {
-  @ApiPropertyOptional({ description: '搜索关键词', example: 'iPhone' })
+  @ApiPropertyOptional({ description: "搜索关键词", example: "iPhone" })
   @IsOptional()
   @IsString()
   search?: string;
 
-  @ApiPropertyOptional({ description: '页码', example: 1, minimum: 1 })
+  @ApiPropertyOptional({ description: "页码", example: 1, minimum: 1 })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   page?: number = 1;
 
-  @ApiPropertyOptional({ 
-    description: '商品状态', 
+  @ApiPropertyOptional({
+    description: "商品状态",
     enum: ProductStatus,
-    example: ProductStatus.PUBLISHED 
+    example: ProductStatus.PUBLISHED,
   })
   @IsOptional()
   @IsEnum(ProductStatus)
@@ -179,19 +181,26 @@ export class ProductQueryDto {
 
 ```typescript
 export class ProductResponseDto {
-  @ApiProperty({ description: '商品ID', example: 'uuid-string' })
+  @ApiProperty({ description: "商品ID", example: "uuid-string" })
   id: string;
 
-  @ApiProperty({ description: '商品名称', example: 'iPhone 15 Pro' })
+  @ApiProperty({ description: "商品名称", example: "iPhone 15 Pro" })
   name: string;
 
-  @ApiPropertyOptional({ description: '商品描述', example: '最新款iPhone，性能强劲' })
+  @ApiPropertyOptional({
+    description: "商品描述",
+    example: "最新款iPhone，性能强劲",
+  })
   description?: string;
 
-  @ApiProperty({ description: '商品价格（分）', example: 999900 })
+  @ApiProperty({ description: "商品价格（分）", example: 999900 })
   price: number;
 
-  @ApiProperty({ description: '商品状态', enum: ProductStatus, example: ProductStatus.PUBLISHED })
+  @ApiProperty({
+    description: "商品状态",
+    enum: ProductStatus,
+    example: ProductStatus.PUBLISHED,
+  })
   status: ProductStatus;
 }
 ```
@@ -200,17 +209,24 @@ export class ProductResponseDto {
 
 ```typescript
 export class LoginDto {
-  @ApiPropertyOptional({ description: '微信OpenID（微信登录时使用）', example: 'wx_openid_123' })
+  @ApiPropertyOptional({
+    description: "微信OpenID（微信登录时使用）",
+    example: "wx_openid_123",
+  })
   @IsOptional()
   @IsString()
   openId?: string;
 
-  @ApiPropertyOptional({ description: '邮箱地址', example: 'user@example.com' })
+  @ApiPropertyOptional({ description: "邮箱地址", example: "user@example.com" })
   @IsOptional()
   @IsEmail()
   email?: string;
 
-  @ApiPropertyOptional({ description: '密码（最少6位）', example: 'password123', minLength: 6 })
+  @ApiPropertyOptional({
+    description: "密码（最少6位）",
+    example: "password123",
+    minLength: 6,
+  })
   @IsOptional()
   @IsString()
   @MinLength(6)
@@ -219,6 +235,7 @@ export class LoginDto {
 ```
 
 **DTO 装饰器说明：**
+
 - `@ApiProperty()`: 必需属性
 - `@ApiPropertyOptional()`: 可选属性
 - `enum`: 枚举类型定义
@@ -231,14 +248,22 @@ export class LoginDto {
 
 ```typescript
 export class ProductResponseDto {
-  @ApiPropertyOptional({ 
-    description: '商家信息',
-    type: 'object',
+  @ApiPropertyOptional({
+    description: "商家信息",
+    type: "object",
     properties: {
-      id: { type: 'string', description: '商家ID', example: 'uuid-string' },
-      nickname: { type: 'string', description: '商家昵称', example: '苹果官方旗舰店' },
-      avatar: { type: 'string', description: '商家头像', example: 'avatar.jpg' }
-    }
+      id: { type: "string", description: "商家ID", example: "uuid-string" },
+      nickname: {
+        type: "string",
+        description: "商家昵称",
+        example: "苹果官方旗舰店",
+      },
+      avatar: {
+        type: "string",
+        description: "商家头像",
+        example: "avatar.jpg",
+      },
+    },
   })
   merchant?: {
     id: string;
@@ -246,7 +271,10 @@ export class ProductResponseDto {
     avatar?: string;
   };
 
-  @ApiPropertyOptional({ description: '商品规格', type: [ProductSpecResponseDto] })
+  @ApiPropertyOptional({
+    description: "商品规格",
+    type: [ProductSpecResponseDto],
+  })
   specs?: ProductSpecResponseDto[];
 }
 ```
@@ -255,19 +283,19 @@ export class ProductResponseDto {
 
 ```typescript
 export class ProductListResponseDto {
-  @ApiProperty({ description: '商品列表', type: [ProductResponseDto] })
+  @ApiProperty({ description: "商品列表", type: [ProductResponseDto] })
   products: ProductResponseDto[];
 
-  @ApiProperty({ description: '总数量', example: 100 })
+  @ApiProperty({ description: "总数量", example: 100 })
   total: number;
 
-  @ApiProperty({ description: '当前页码', example: 1 })
+  @ApiProperty({ description: "当前页码", example: 1 })
   page: number;
 
-  @ApiProperty({ description: '每页数量', example: 10 })
+  @ApiProperty({ description: "每页数量", example: 10 })
   limit: number;
 
-  @ApiProperty({ description: '总页数', example: 10 })
+  @ApiProperty({ description: "总页数", example: 10 })
   totalPages: number;
 }
 ```
@@ -284,16 +312,16 @@ sequenceDiagram
 
     Client->>Swagger: 访问 /api 文档
     Swagger->>Client: 返回交互式文档界面
-    
+
     Client->>Swagger: 测试 API 接口
     Swagger->>Controller: 发送 HTTP 请求
-    
+
     Controller->>Controller: 验证 DTO (class-validator)
     Controller->>Service: 调用业务逻辑
     Service->>DB: 数据库操作
     DB->>Service: 返回数据
     Service->>Controller: 返回处理结果
-    
+
     Controller->>Controller: 格式化响应 (Response DTO)
     Controller->>Swagger: 返回标准化响应
     Swagger->>Client: 显示响应结果
@@ -311,8 +339,8 @@ sequenceDiagram
 
 ```typescript
 // ✅ 好的实践
-@ApiPropertyOptional({ 
-  description: '用户昵称', 
+@ApiPropertyOptional({
+  description: '用户昵称',
   example: '张三',
   minLength: 1,
   maxLength: 50
@@ -343,8 +371,8 @@ interface ApiResponse<T> {
 ### 4. 错误处理文档化
 
 ```typescript
-@ApiResponse({ 
-  status: 400, 
+@ApiResponse({
+  status: 400,
   description: '请求参数错误',
   schema: {
     type: 'object',
@@ -364,6 +392,7 @@ interface ApiResponse<T> {
 **原因**：缺少 `@ApiProperty` 或 `@ApiPropertyOptional` 装饰器
 
 **解决方案**：
+
 ```typescript
 // 修改前
 export class LoginDto {
@@ -374,7 +403,7 @@ export class LoginDto {
 
 // 修改后
 export class LoginDto {
-  @ApiPropertyOptional({ description: '微信OpenID', example: 'wx_openid_123' })
+  @ApiPropertyOptional({ description: "微信OpenID", example: "wx_openid_123" })
   @IsOptional()
   @IsString()
   openId?: string;
@@ -384,11 +413,12 @@ export class LoginDto {
 ### 问题 2：枚举类型不显示可选值
 
 **解决方案**：
+
 ```typescript
-@ApiPropertyOptional({ 
-  description: '商品状态', 
+@ApiPropertyOptional({
+  description: '商品状态',
   enum: ProductStatus,
-  example: ProductStatus.PUBLISHED 
+  example: ProductStatus.PUBLISHED
 })
 @IsOptional()
 @IsEnum(ProductStatus)
@@ -398,9 +428,10 @@ status?: ProductStatus;
 ### 问题 3：嵌套对象类型不正确
 
 **解决方案**：
+
 ```typescript
-@ApiPropertyOptional({ 
-  description: '商品规格', 
+@ApiPropertyOptional({
+  description: '商品规格',
   type: [ProductSpecResponseDto] // 使用具体的 DTO 类
 })
 specs?: ProductSpecResponseDto[];
@@ -411,15 +442,15 @@ specs?: ProductSpecResponseDto[];
 ### 开发环境
 
 1. 启动应用：`npm run start:dev`
-2. 访问文档：`http://localhost:3001/api`
+2. 访问文档：`http://localhost:3000/api`
 
 ### 生产环境注意事项
 
 ```typescript
 // 生产环境可能需要条件性启用 Swagger
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup("api", app, document);
 }
 ```
 

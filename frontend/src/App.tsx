@@ -23,6 +23,8 @@ const OrderDetailPage = React.lazy(
 );
 const ProfilePage = React.lazy(() => import("./pages/profile/ProfilePage"));
 const MessagePage = React.lazy(() => import("./pages/message/MessagePage"));
+const PaymentProcessPage = React.lazy(() => import("./pages/payment/PaymentProcessPage"));
+const PaymentResultPage = React.lazy(() => import("./pages/payment/PaymentResultPage"));
 
 // 加载中组件
 const LoadingSpinner = () => (
@@ -43,6 +45,8 @@ function App() {
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="product/:id" element={<ProductDetailPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="payment/process" element={<PaymentProcessPage />} />
+          <Route path="payment/result" element={<PaymentResultPage />} />
           <Route path="orders" element={<OrderListPage />} />
           <Route path="orders/:id" element={<OrderDetailPage />} />
 

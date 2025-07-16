@@ -250,20 +250,20 @@
   - [x] 结算金额计算服务抽象
   - [x] 生成订单号 (雪花算法或 UUID)
   - [x] 订单状态枚举 pending/paid/shipped/delivered/cancelled/refunded
-  - [ ] E2E 测试 Cart → Order
+  - [x] E2E 测试 Cart → Order
 - 下午：微信支付沙箱接入
-  - [ ] 注册沙箱 key，下载证书
-  - [ ] `pnpm add @wechat-pay/node` SDK
-  - [ ] 创建 `/pay/wxpay` controller
-  - [ ] 本地回调地址 ngrok 映射测试
-  - [ ] 记录签名校验
+  - [-] 注册沙箱 key，下载证书
+  - [-] `pnpm add @wechat-pay/node` SDK
+  - [x] 创建 `/pay/wxpay` controller
+  - [x] 本地回调地址 ngrok 映射测试
+  - [-] 记录签名校验
 - 晚上：Coupon & 收藏 & 浏览 API
-  - [ ] 建表：Coupon, Favorite, BrowseRecord
-  - [ ] nest g module/service/controller (coupon/favorite/history)
-  - [ ] 券的状态流转 (未使用/已使用/已过期)
-  - [ ] API: 领取优惠券、我的优惠券列表
-  - [ ] API: 收藏/取消收藏、获取收藏列表
-  - [ ] API: 新增浏览记录、获取最近浏览
+  - [-] 建表：Coupon, Favorite, BrowseRecord
+  - [-] nest g module/service/controller (coupon/favorite/history)
+  - [-] 券的状态流转 (未使用/已使用/已过期)
+  - [-] API: 领取优惠券、我的优惠券列表
+  - [-] API: 收藏/取消收藏、获取收藏列表
+  - [-] API: 新增浏览记录、获取最近浏览
 
 #### Day 15
 
@@ -275,19 +275,19 @@
   - [ ] Unit test for consumer
 - 下午：前后端联调 (产品&购物车)
   - [ ] 修改前端 API baseURL 指向后端
-  - [ ] 移除对应 MSW mock
-  - [ ] 验证商品列表真数据
-  - [ ] 处理跨域 CORS
-  - [ ] 记录 bug / fix
+  - [-] 移除对应 MSW mock
+  - [-] 验证商品列表真数据
+  - [-] 处理跨域 CORS
+  - [x] 记录 bug / fix
 
 #### Day 16
 
 - 上午：前后端联调 (支付&订单)
-  - [ ] 调用后端生成支付参数
-  - [ ] H5 调起微信支付 (沙箱公众号)
-  - [ ] 回调后变更订单状态
-  - [ ] 前端支付成功界面
-  - [ ] 日志 & 失败重试策略
+  - [-] 调用后端生成支付参数
+  - [-] H5 调起微信支付 (沙箱公众号)
+  - [-] 回调后变更订单状态
+  - [-] 前端支付成功界面
+  - [-] 日志 & 失败重试策略
 - 下午：安全 & 日志
   - [ ] Helmet 中间件、RateLimit
   - [ ] Winston 日志到文件 & 控制台

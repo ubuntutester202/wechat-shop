@@ -16,11 +16,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: development  # 使用开发阶段构建
+      target: development # 使用开发阶段构建
     ports:
-      - "3001:3001"
+      - "3000:3000"
     env_file:
-      - ./backend/.env.docker  # 使用Docker专用环境配置
+      - ./backend/.env.docker # 使用Docker专用环境配置
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
@@ -28,7 +28,7 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
-    command: ["pnpm", "run", "start:dev"]  # 开发模式启动
+    command: ["pnpm", "run", "start:dev"] # 开发模式启动
 
 volumes:
   pgdata:

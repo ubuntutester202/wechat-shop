@@ -137,7 +137,6 @@ sequenceDiagram
 我们在 `backend/Dockerfile` 中定义了构建镜像的步骤。这是一个**多阶段构建**的 `Dockerfile`，好处是最终的生产镜像非常小，且不包含编译过程中的非必需文件，更安全。
 
 - **`development` 阶段**:
-
   1.  使用 `node:20-alpine` 作为基础镜像。
   2.  复制 `package.json` 和 `pnpm-lock.yaml` 并安装所有依赖（包括开发依赖）。
   3.  复制所有源代码。
@@ -161,7 +160,7 @@ services:
       context: ./backend # 指定 Dockerfile 的上下文路径
       dockerfile: Dockerfile
     ports:
-      - "3001:3001" # 将容器的 3001 端口映射到主机的 3001 端口
+      - "3000:3000" # 将容器的 3000 端口映射到主机的 3000 端口
     environment:
       - NODE_ENV=development # 设置环境变量为开发模式
     env_file:

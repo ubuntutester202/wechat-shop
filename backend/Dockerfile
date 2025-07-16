@@ -22,7 +22,7 @@ RUN pnpm prisma:generate
 COPY . .
 
 # 8. Expose port
-EXPOSE 3001
+EXPOSE 3000
 
 # 9. Development command (will be overridden by docker-compose)
 CMD ["pnpm", "run", "start:dev"]

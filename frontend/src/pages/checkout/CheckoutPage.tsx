@@ -81,14 +81,62 @@ const CheckoutPage: React.FC = () => {
   };
 
   // 处理支付
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (selectedItems.length === 0) {
       alert('请选择要结算的商品');
       return;
     }
     
-    // 显示未接入提示
-    alert('支付功能暂未接入，敬请期待！');
+    try {
+      // 生成订单ID
+      const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // 准备支付数据
+      const paymentData = {
+        orderId,
+        amount: Math.round(orderCalculation.total * 100), // 转换为分
+        description: `商品购买-${selectedItems.length}件商品`,
+        openid: 'mock_openid_' + Date.now(), // 模拟openid
+      };
+
+      console.log('创建支付订单:', paymentData);
+
+      // 调用后端创建支付订单
+      const response = await fetch('/api/pay/wxpay/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // TODO: 添加认证token
+          // 'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      if (!response.ok) {
+        throw new Error('创建支付订单失败');
+      }
+
+      const paymentParams = await response.json();
+      console.log('支付参数:', paymentParams);
+
+      // 构建支付页面URL参数
+      const searchParams = new URLSearchParams();
+      searchParams.set('orderId', orderId);
+      searchParams.set('amount', paymentData.amount.toString());
+      searchParams.set('description', paymentData.description);
+      
+      // 添加微信支付参数
+      Object.entries(paymentParams).forEach(([key, value]) => {
+        searchParams.set(key, value as string);
+      });
+
+      // 使用React Router导航到支付页面
+      navigate(`/payment/process?${searchParams.toString()}`);
+      
+    } catch (error) {
+      console.error('支付失败:', error);
+      alert('支付失败，请重试');
+    }
   };
 
   // 如果没有选中商品，跳转回购物车
@@ -293,4 +341,4 @@ const CheckoutPage: React.FC = () => {
   );
 };
 
-export default CheckoutPage; 
+export default CheckoutPage;

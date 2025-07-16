@@ -71,7 +71,7 @@ cat backend/.env.dev
 ```env
 # For backend service
 NODE_ENV=development
-PORT=3001
+PORT=3000
 DATABASE_URL="postgresql://postgres:password@postgres:5432/wechat-shop?schema=public"
 
 # For postgres service
@@ -108,18 +108,18 @@ docker-compose exec backend npx prisma migrate dev --name init
 
 ```bash
 # 测试基本端点
-curl http://localhost:3001
+curl http://localhost:3000
 # 应该返回: Hello World!
 
 # 测试用户端点
-curl http://localhost:3001/users
+curl http://localhost:3000/users
 # 应该返回: []
 ```
 
 或者在浏览器中访问：
 
-- `http://localhost:3001` - 应该显示 "Hello World!"
-- `http://localhost:3001/users` - 应该显示空数组 `[]`
+- `http://localhost:3000` - 应该显示 "Hello World!"
+- `http://localhost:3000/users` - 应该显示空数组 `[]`
 
 ### 常见问题排查
 
@@ -145,7 +145,7 @@ docker-compose exec postgres pg_isready -U postgres
 
 ```bash
 # 检查端口占用情况
-netstat -ano | findstr :3001
+netstat -ano | findstr :3000
 netstat -ano | findstr :5432
 ```
 
@@ -161,7 +161,7 @@ graph TD
     D --> E[启动 Docker 服务<br/>docker-compose up -d --build];
     E --> F[等待容器启动完成<br/>docker-compose ps];
     F --> G[执行数据库迁移<br/>docker-compose exec backend npx prisma migrate dev];
-    G --> H[测试 API 端点<br/>curl http://localhost:3001];
+    G --> H[测试 API 端点<br/>curl http://localhost:3000];
     H --> I{API 测试成功？};
     I -->|是| J[环境搭建完成 ✅];
     I -->|否| K[排查问题];
@@ -373,7 +373,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "3000:3000"
     env_file: # 也从同一个文件加载
       - ./backend/.env.dev
     depends_on:
@@ -604,11 +604,11 @@ services:
   backend:
     # ...
     ports:
-      - "3001:3001" # 将主机的 3001 端口映射到容器的 3001 端口
+      - "3000:3000" # 将主机的 3000 端口映射到容器的 3000 端口
     # ...
 ```
 
-这意味着，任何发送到你 Windows 主机 `localhost:3001` 的请求，都会被 Docker 自动转发到 `backend` 容器内部的 3001 端口，而我们的 NestJS 应用正在那里监听请求。
+这意味着，任何发送到你 Windows 主机 `localhost:3000` 的请求，都会被 Docker 自动转发到 `backend` 容器内部的 3000 端口，而我们的 NestJS 应用正在那里监听请求。
 
 ### 数据持久化机制
 
@@ -719,8 +719,8 @@ services:
 
 基于此原理，你可以通过以下任一方式进行测试：
 
-1.  **使用浏览器**：直接在浏览器地址栏输入 `http://localhost:3001/users` 并访问。
-2.  **使用 cURL**：在终端中执行命令 `curl http://localhost:3001/users`。
+1.  **使用浏览器**：直接在浏览器地址栏输入 `http://localhost:3000/users` 并访问。
+2.  **使用 cURL**：在终端中执行命令 `curl http://localhost:3000/users`。
 
 如果一切正常，你应该能看到一个包含用户数据的 JSON 数组或一个空数组 `[]`。
 
@@ -738,7 +738,7 @@ graph TD
         DockerNetwork["Docker 网络 (localhost)"]
 
         subgraph "Backend 容器"
-            NestApp["NestJS 应用<br>监听 3001 端口"]
+            NestApp["NestJS 应用<br>监听 3000 端口"]
             Controller["AppController<br>@Get('/users')"]
             Service["AppService<br>getUsers()"]
             PrismaService["PrismaService"]
@@ -749,8 +749,8 @@ graph TD
         end
     end
 
-    Client -- "1 HTTP GET 请求<br>http://localhost:3001/users" --> DockerNetwork
-    DockerNetwork -- "2 端口映射<br>Host(3001) -> Container(3001)" --> NestApp
+    Client -- "1 HTTP GET 请求<br>http://localhost:3000/users" --> DockerNetwork
+    DockerNetwork -- "2 端口映射<br>Host(3000) -> Container(3000)" --> NestApp
     NestApp --> Controller
     Controller -- "3 调用 appService.getUsers()" --> Service
     Service -- "4 调用 prisma.user.findMany()" --> PrismaService

@@ -112,7 +112,7 @@ docker-compose exec backend npx prisma migrate dev
 
 ```bash
 # 检查端口占用
-netstat -ano | findstr :3001
+netstat -ano | findstr :3000
 netstat -ano | findstr :5432
 
 # 停止冲突的Docker容器
@@ -146,20 +146,20 @@ npx prisma migrate reset
 
 ### 测试端点
 
-- 注册：`POST http://localhost:3001/auth/register`
-- 登录：`POST http://localhost:3001/auth/login`
-- 用户信息：`GET http://localhost:3001/auth/profile`
+- 注册：`POST http://localhost:3000/auth/register`
+- 登录：`POST http://localhost:3000/auth/login`
+- 用户信息：`GET http://localhost:3000/auth/profile`
 
 ### 示例请求
 
 ```bash
 # 注册用户
-curl -X POST http://localhost:3001/auth/register \
+curl -X POST http://localhost:3000/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"password123","nickname":"测试用户","phone":"13800138000"}'
 
 # 登录
-curl -X POST http://localhost:3001/auth/login \
+curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"password123"}'
 ```
